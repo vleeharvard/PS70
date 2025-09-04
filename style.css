@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+:root {
+  --background-color: #181818;
+  --primary-text-color: #dedede;
+  --secondary-text-color: #6a6a6a;
+  font-family: Lato;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  color: var(--primary-text-color);
+}
+
+body {
+  background-color: var(--background-color);
+  margin: 5rem 10rem;
+  box-sizing: border-box;
+  font-size: 1.5rem;
+}
+
+h1 {
+  font-size: 7rem;
+  font-weight: 900;
+  margin-bottom: 3rem;
+}
+
+h2 {
+  margin-top: 4rem;
+  font-size: 5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 3rem;
+  font-weight: 400;
+}
+
+p {
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: underline;
+  color: var(--primary-text-color);
+}
+
+/* Nav */
+
+nav {
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  justify-content: flex-end;
+}
+
+nav a {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-style: italic;
+  text-decoration: none;
+}
+
+#logo {
+  margin-right: auto;
+}
+
+#logo img {
+  width: 15rem;
+}
+
+/* Hero */
+
+#hero {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  align-items: left;
+  justify-content: center;
+}
+
+#hero h1 {
+  font-size: 10rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+}
+
+/* Work */
+
+#work {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Footer */
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6rem;
+  margin-top: 30rem;
+}
+
+footer #logo img {
+  width: 40rem;
+}
+
+footer #contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+footer a {
+  font-size: 2rem;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+}
+
+/* Blog */
+
+.blog {
+  width: 50vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog ul {
+  margin-bottom: 3rem;
+  font-size: 2rem;
+}
+
+.blog li, .blog h3 {
+  list-style-position: inside;
+  color: var(--secondary-text-color);
+}
