@@ -29,19 +29,21 @@ body {
 h1 {
   font-size: 7rem;
   font-weight: 900;
-  margin-bottom: 3rem;
 }
 
 h2 {
-  margin-top: 4rem;
   font-size: 5rem;
   font-weight: 600;
+  margin-top: 4rem;
   margin-bottom: 1rem;
 }
 
 h3 {
   font-size: 3rem;
   font-weight: 400;
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+
 }
 
 p {
@@ -52,6 +54,24 @@ p {
 a {
   text-decoration: underline;
   color: var(--primary-text-color);
+}
+
+ul, ol {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  font-size: 2rem;
+}
+
+li {
+  list-style-position: inside;
+}
+
+br.big {
+  line-height: 7rem;
+}
+
+.secondary {
+  color: var(--secondary-text-color);
 }
 
 /* Nav */
@@ -103,6 +123,10 @@ nav a {
   height: 100vh;
 }
 
+#work a {
+  font-size: 3rem;
+}
+
 /* Footer */
 
 footer {
@@ -135,14 +159,4 @@ footer a {
   width: 50vw;
   margin-left: auto;
   margin-right: auto;
-}
-
-.blog ul {
-  margin-bottom: 3rem;
-  font-size: 2rem;
-}
-
-.blog li, .blog h3 {
-  list-style-position: inside;
-  color: var(--secondary-text-color);
 }

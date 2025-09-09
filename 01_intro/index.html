@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Victor Lee's PS70</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="../style.css">
   </head>
 
   <nav>
-    <a id="logo" href="/index.html"><img src="/signature.svg" alt="Logo"></a>
-    <a href="">Work</a>
-    <a href="/about.html">About</a>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="../index.html#work">Work</a>
+    <a href="../about.html">About</a>
   </nav>
 
   <body>
     <section class="blog">
         <h1>Final project proposal</h1>
-        <h3>Brainstorming:</h3>
+        <h3 class="secondary">Brainstorming:</h3>
         
-        <ul>
+        <ul class="secondary">
             <li>Low profile keyboard with all the bells and whistles</li>
             <li>Portable midi controller/drum looper like the TE pocket operator</li>
             <li>Digital typewriter with OLED display</li>
@@ -29,32 +29,55 @@
             <li><important>Small PCB camera that uploads photos to web server</important></li>
         </ul>
 
-        <h2>A custom low-profile keyboard</h2>
-        <p>
-        I've been interested in custom keyboards for a while now and have even dabbled in making my own macropad. As I shift from working at home to libraries (I spend most of my time in the Cabot Library or Smith Center), a portable, low profile custom keyboard would be nice to have.
-        <br><br>
-        I've tried to design my own macropad PCB, and while the core functionality of the keyboard worked, I wasn't actually able to get the macropad, display, and RGB working. I feel like returning this project in PS70 would be a good way to redeem myself while also giving me a challenging but definetely doable project.
-        <br><br>
-        The goal is to have a 65% keyboard utilizing Kalih low profile chocolate switches with RGB and a rotary encoder. I also want to try implementing some creating space saving designs (ie. creating a backplate that also doubles as a case). I'm taking inspiration from the <a href="https://worklouder.cc/xyz-work-board-2">Work Louder</a> keyboards.
-        <br><br>
-        Theres definetly some cons to this project. For one, this is a project I already have experience in. Despite not finishing my macropad, this project won't force me to do something I've never done before compared to other projects. Also, I'm not entirely sure on the utility of this project since the most portable option for typing on the go is the keyboard on my laptop...
-        </p>
-
         <h2>Small PCB digicam</h2>
         <p>
-        I'm a fan of decentralizing your personal technology. Since our phones can do basically anything, its become an essential tool in our daily lives. But, this convenience comes at a cost: whenever I reach for my phone, I end up getting distracted and instinctively doomscroll. Thus, theres been a growing movement to decentralize smartphones—to split the various functions of your phone into its seperate device.
-        <br><br>
-        I think it would be really cool to have a small digicam contained on one PCB that could upload pictures to a self-hosted server. I like to bike around the city sometimes and I think taking pictures would be a cool way of documenting my adventures. A low-cost portable camera (that I don't have to worry about) would be super useful.
-        <br><br>
-        While this a project that I have absolutely zero experience with, it would defiently be a good learning experience. I can also think of how I'd break down this problem into several smaller, more managable problems (upload placeholder file to web server with ESP32 dev kit, create custom ESP32 camera, etc.).
+          I'm a fan of decentralizing your personal technology. Since our phones can do basically anything, its become an essential tool in our daily lives. But, this convenience comes at a cost: whenever I reach for my phone, I end up getting distracted and instinctively doomscroll. Thus, theres been a growing movement to decentralize smartphones—to split the various functions of your phone into its seperate device.
+          <br><br>
+          I think it would be really cool to have a small digicam contained on one PCB that could upload pictures to a self-hosted server. I like to bike around the city sometimes and I think taking pictures would be a cool way of documenting my adventures. A low-cost portable camera that I don't have to worry about losing or breaking would be super useful. There is also a lot of novelty surrounding disposable film cameras, which this project takes a lot of inspiration from. Photos can't be immediately viewed on the device itself (mimicing how you have to develop film) and these cameras are very cheap and expendable.
+          <br><br>
+          While this a project that I have absolutely zero experience with, it would defiently be a good learning experience. I can also think of how I'd break down this problem into several smaller, more managable problems (upload placeholder file to web server with ESP32 dev kit, create custom ESP32 camera with flash, etc.).
         </p>
+
+        <h2>Portable midi controller/drum looper</h2>
+        <p>
+          I'm dead set on a project that involves creating a custom PCB, so another cool PCB project I've seen is the <a href="https://teenage.engineering/products/po">Teenage Engineering Pocket Operator</a>. These things are definetly something I'd like to have sitting on my desk or shelf and I think I'd learn a lot about electronics if I were to create one myself.
+          <br><br>
+          The biggest concern with this project is feasibility. Programming the music software and designing the audio hardware will be significant challenges. I remember hearing that playing sounds with microcontrollers is difficult/finnicky so its very likely that my audio will be really low fidelity beeping. Programming the software for a musical device with features like looping also sounds complicated.
+        </p>
+
+        <h2>A custom low-profile keyboard</h2>
+        <p>
+          I've been interested in custom keyboards for a while now and have even dabbled in making my own macropad. As I shift from working at home to libraries (I spend most of my time in the Cabot Library or Smith Center), a portable, low profile custom keyboard would be nice to have.
+          <br><br>
+          I've tried to design my own macropad PCB, and while the core functionality of the keyboard worked, I wasn't actually able to get the macropad, display, and RGB working. I feel like returning this project in PS70 would be a good way to redeem myself while also giving me a challenging but definetely doable project.
+          <br><br>
+          The goal is to have a 65% keyboard utilizing Kalih low profile chocolate switches with RGB and a rotary encoder. I also want to try implementing some creating space saving designs (ie. creating a backplate that also doubles as a case). I'm taking inspiration from the <a href="https://worklouder.cc/xyz-work-board-2">Work Louder</a> keyboards.
+          <br><br>
+          Theres definetly some cons to this project. For one, this is a project I already have experience in. Despite not finishing my macropad, this project won't force me to do something I've never done before compared to other projects. Also, I'm not entirely sure on the utility of this project since the most portable option for typing on the go is the keyboard on my laptop...
+        </p>
+        <br class="big">
+        <h3>I want to follow through with PCB digicam project!!!</h3>
+        <p>
+          This project is a good balance of technical complexity, utility, and novelty. 
+          <br>
+          Most importantly, it's <b>the thing I'd want to see made the most</b> .
+          <br><br>
+          Here's a vague timeline of the stuff I'd need to do:
+        </p>
+
+        <ol>
+          <li>Get a ESP32 devkit to upload files onto a webserver</li>
+          <li>Prototype circuit on breadboard to take pictures with and without flash</li>
+          <li>Create PCB to replace prototype</li>
+          <li>Design and manufacture minimal 3D printed case and lanyard</li>
+        </ol>
     </section>
   </body>
 
   <footer>
-    <a id="logo" href="/index.html"><img src="/signature.svg" alt="Logo"></a>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
     <a href="">Work</a>
-    <a href="/about.html">About</a>
+    <a href="../about.html">About</a>
     <div id="contact-info">
       <a href="">vlee@college.harvard.edu</a>
       <a href="">617 817 0330</a>
