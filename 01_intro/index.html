@@ -39,6 +39,7 @@
         </p>
 
         <h2>Portable midi controller/drum looper</h2>
+        <img src="./Assets/PocketOperator">
         <p>
           I'm dead set on a project that involves creating a custom PCB, so another cool PCB project I've seen is the <a href="https://teenage.engineering/products/po">Teenage Engineering Pocket Operator</a>. These things are definetly something I'd like to have sitting on my desk or shelf and I think I'd learn a lot about electronics if I were to create one myself.
           <br><br>
@@ -46,6 +47,7 @@
         </p>
 
         <h2>A custom low-profile keyboard</h2>
+        <img src="./Assets/Keyboard">
         <p>
           I've been interested in custom keyboards for a while now and have even dabbled in making my own macropad. As I shift from working at home to libraries (I spend most of my time in the Cabot Library or Smith Center), a portable, low profile custom keyboard would be nice to have.
           <br><br>
@@ -71,6 +73,12 @@
           <li>Create PCB to replace prototype</li>
           <li>Design and manufacture minimal 3D printed case and lanyard</li>
         </ol>
+
+        <p>
+          From what I understand, there already exists an ESP32 module with an onboard camera called the <a href="https://media.digikey.com/pdf/Data%20Sheets/DFRobot%20PDFs/DFR0602_Web.pdf">ESP32-Cam</a>. It supports a variety of <a href="https://blog.arducam.com/esp32-machine-vision-learning-guide/">camera modules</a>, a ESP32-S SoC for image capture and basic ML tasks, and MicroSd card support. However, it requires either a USB to serial adapter (FDTI programmer) or the ESP32-CAM-MB since it doesn't have a USB port.
+          <br><br>
+          This would be a good starting point for my project since I could use it to work on the software for my project before creating a fully fleshed out custom PCB. However, it's lackluster image quality, lack of a USB port, and lack of a battery warrant the creation of a new board with these features and a much better image sensor. This is where things get difficult. I need to research a better image sensor that can still with work the limitations of an ESP32 SoC in order to utilize the wifi capabilities. Since the ESP32 doesn't really have enough RAM or processing power, it may be necessary to choose a different SoC.1
+        </p>
     </section>
   </body>
 
