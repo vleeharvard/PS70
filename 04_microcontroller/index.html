@@ -48,6 +48,24 @@
         <img src="./Assets/WebPage.png" alt="">
         <p class="caption">This is what the web page looks like.</p>
 
+        <h2>Pictures</h2>
+        <p>All of these were taken on the ESP-32 CAM with <code>.jpeg_quality = 10</code></p>
+        <div id="slideshow1" class="slideshow-container">
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image0.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image1.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image2.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image3.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image4.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image5.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image6.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image7.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image8.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image9.jpg" alt=""> </div>
+
+          <a class="prev" style="color: var(--primary-text-color);" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+          <a class="next" style="color: var(--primary-text-color);" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+        </div>
+
         <h2>Code Breakdown</h2>
 
         <code>
@@ -399,25 +417,6 @@ bool takeNewPhoto = false;
         <p>
             I did have a lot of fun this week though and am pretty satisfied with the outcome of this assignment!
         </p>
-
-        <h2>Pictures</h2>
-        <p>All of these were taken on the ESP-32 CAM with <code>.jpeg_quality = 10</code></p>
-        <div id="slideshow1" class="slideshow-container">
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image0.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image1.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image2.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image3.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image4.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image5.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image6.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image7.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image8.jpg" alt=""> </div>
-          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image9.jpg" alt=""> </div>
-
-          <a class="prev" style="color: var(--primary-text-color);" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
-          <a class="next" style="color: var(--primary-text-color);" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
-        </div>
-
         
     <script src="../slideshow.js"></script>
   </body>
