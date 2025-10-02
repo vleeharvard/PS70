@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Victor Lee's PS70</title>
+    <link rel="stylesheet" href="../style.css">
+  </head>
+
+  <nav>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="../index.html#work">Work</a>
+    <a href="../about.html">About</a>
+  </nav>
+
+  <body>
+    <section class="blog">
+
+        <h1>Week 3: Microcontroller Programming</h1>
+
+        <h2>Getting started with the ESP32-CAM</h2>
+
+        <p>
+            I began this assignment by familiarizing myself with the ESP32-CAM module and completing all the necessary prequisite setup steps. I followed <a href="https://www.youtube.com/watch?v=hSr557hppwY">this youtube video</a> and reading <a href="https://lastminuteengineers.com/getting-started-with-esp32-cam/">this blog post</a>.
+        </p>
+
+        <p>
+            After setting up the ESP32-CAM (which actually wasn't too hard), I was able to run the example in ESP32 > Camera > CameraWebServer. Playing around with it was cool, but I didn't really learn much about microcontroller programming nor does it really fit my use case.
+        </p>
+
+        <h2>Creating my own ESP32-CAM sketch</h2>
+
+        <p>
+            So instead, I followed different <a href="https://randomnerdtutorials.com/esp32-cam-take-photo-display-web-server/">tutorials</a>, <a href="https://www.diyengineers.com/2023/04/13/esp32-cam-complete-guide/">examples</a>, and <a href="https://randomnerdtutorials.com/esp32-cam-ov2640-camera-settings/">documentation</a> to create a sketch that I could better understand. While a lot of my code was pulled from these sources, I made an effort to actually understand what the sketch was doing. <span class="code">test</span>
+        </p>
+
+        <p>
+            The general idea of the sketch is: ESP32 hosts a asynchronous webserver -> ESP32 takes a picture -> webserver gets the picture via web request. If we hit the take a new picture button -> webserver requests to take new picture -> ESP32 takes picture -> upon refresh, webserver gets the new picture via  request.
+        </p>
+
+        <p>
+            The first picture always looks kind of bad. Not too sure why. One of the examples I looked at took two pictures after a short delay and it supposedly helped, but I have yet to see some satisfactory results.
+        </p>
+
+        <h2>Code Breakdown</h2>
+
+        <code>
+            <div>
+                <pre>#include "WiFi.h"
+#include "esp_camera.h"
+#include "esp_timer.h"
+#include "img_converters.h"
+#include "Arduino.h"
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+#include "driver/rtc_io.h"
+#include &lt;ESPAsyncWebServer.h&gt;
+#include &lt;SPIFFS.h&gt;
+#include &lt;FS.h&gt;</pre>
+            </div>
+        </code>
+        <p>Including the neccessary headers</p>
+
+        <code>
+            <div>
+                <pre>const char* ssid = "MAKERSPACE";
+const char* password = "wow what could this possibly be";
+
+AsyncWebServer server(80);
+
+bool takeNewPhoto = false;
+
+#define FILE_PHOTO "/photo.jpg"</pre>
+            </div>
+        </code>
+        <p>Declaring some variables that will be used later in the sketch. <code>Wifi SSID</code> and <code>password</code> are necessary to host a web server. I'm not sure if I'm allowed to use the MAKERSPACE wifi but better to ask for forgiveness than permission I guess.</p>
+        
+        <code>
+            <div>
+                <pre>#define PWDN_GPIO_NUM  32
+#define RESET_GPIO_NUM -1
+#define XCLK_GPIO_NUM  0
+#define SIOD_GPIO_NUM  26
+#define SIOC_GPIO_NUM  27
+
+#define Y9_GPIO_NUM    35
+#define Y8_GPIO_NUM    34
+#define Y7_GPIO_NUM    39
+#define Y6_GPIO_NUM    36
+#define Y5_GPIO_NUM    21
+#define Y4_GPIO_NUM    19
+#define Y3_GPIO_NUM    18
+#define Y2_GPIO_NUM    5
+#define VSYNC_GPIO_NUM 25
+#define HREF_GPIO_NUM  23
+#define PCLK_GPIO_NUM  22</pre>
+            </div>
+        </code>
+        <p>Declaring variables representing the pin numbers on the ESP32-CAM. These will be used later when we set a camera configuration.</p>
+
+        <code>
+            <div>
+                <pre>const char index_html[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE HTML&gt;&lt;html&gt;
+&lt;head&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;style&gt;
+    @import url('https://fonts.googleapis.com/css2?family=Lato [...] );
+    :root {
+      --background-color: #181818;
+      --primary-text-color: #dedede;
+      --secondary-text-color: #6a6a6a;
+      --accent-color: #FFFFFF;
+      font-family: Lato;
+    }
+    body {
+      text-align:center; 
+      background-color: var(--background-color);
+    }
+    html { color: var(--primary-text-color); }
+    button {
+      cursor: pointer;
+      background-color: var(--primary-text-color);
+      border-radius: 5px;
+      border: none;
+      padding: 7px;
+      color: var(--background-color);
+    }
+    p { font-size: 16px; }
+    img {
+      transform: rotate(90deg);
+      object-fit: cover;
+      width: 700px;
+      height: 700px;
+    }
+    h1 { font-weight: 900; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="container"&gt;
+    &lt;h1&gt;ESP32-CAM&lt;/h1&gt;
+    &lt;p&gt;
+      &lt;button onclick="capturePhoto()"&gt;CAPTURE ANOTHER PHOTO&lt;/button&gt;
+      &lt;button onclick="location.reload();"&gt;REFRESH PAGE&lt;/button&gt;
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div&gt;&lt;img src="saved-photo" id="photo" width="70%"&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;script&gt;
+  var deg = 0;
+  function capturePhoto() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "/capture", true);
+    xhr.send();
+  }
+&lt;/script&gt;
+&lt;/html&gt;)rawliteral";</pre>
+            </div>
+        </code>
+        <p>This is some pretty simple website code for the webserver to display. It has a button to take a new picture and refresh the page and some CSS. <code>PROGMEM</code> stores this in non-volatile flash memory to be accessed later by the webserver. It make sense to preserve the webpage in non-volatile flash memory versus RAM since we won't be changing the website between powercycles—we will always display the same website.</p>
+
+        <code>
+            <div>
+                <pre>void setup() {
+  Serial.begin(115200);
+  Serial.setDebugOutput(true);
+  Serial.println("\n\n");
+  
+  // Connect to wifi
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println();</pre>
+            </div>
+        </code>
+        <p>We start serial and also connect to Wifi using some fancy library. </p>
+
+        <code>
+            <div>
+                <pre>  SPIFFS.format();
+  if (!SPIFFS.begin(true)) {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    ESP.restart();
+  }
+  else {
+    delay(500);
+    Serial.println("SPIFFS mounted successfully");
+  }</pre>
+            </div>
+        </code>
+        <p>We also start up SPIFFS, which is another way to store things in non volatile memory on ESP32s. Not 100% sure why the particular tutorial I was following chose to store our image in SPIFF, but I imagine that it maybe be useful to preserve our image even after we turn our device on and off (powercycle).</p>
+
+        <code>
+            <div>
+                <pre>  Serial.print("IP Address: http://");
+  Serial.println(WiFi.localIP());</pre>
+            </div>
+        </code>
+        <p>We print the local IP address that the ESP32 is hosting the webserver on. Putting this IP address in a browser will allow us to access the website.</p>
+
+        <code>
+            <div>
+                <pre>  camera_config_t config;
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer = LEDC_TIMER_0;
+  config.pin_d0 = Y2_GPIO_NUM;
+  config.pin_d1 = Y3_GPIO_NUM;
+  config.pin_d2 = Y4_GPIO_NUM;
+  config.pin_d3 = Y5_GPIO_NUM;
+  config.pin_d4 = Y6_GPIO_NUM;
+  config.pin_d5 = Y7_GPIO_NUM;
+  config.pin_d6 = Y8_GPIO_NUM;
+  config.pin_d7 = Y9_GPIO_NUM;
+  config.pin_xclk = XCLK_GPIO_NUM;
+  config.pin_pclk = PCLK_GPIO_NUM;
+  config.pin_vsync = VSYNC_GPIO_NUM;
+  config.pin_href = HREF_GPIO_NUM;
+  config.pin_sccb_sda = SIOD_GPIO_NUM;
+  config.pin_sccb_scl = SIOC_GPIO_NUM;
+  config.pin_pwdn = PWDN_GPIO_NUM;
+  config.pin_reset = RESET_GPIO_NUM;
+  config.xclk_freq_hz = 20000000;
+  config.frame_size = FRAMESIZE_XGA;
+  config.pixel_format = PIXFORMAT_JPEG;
+  config.grab_mode = CAMERA_GRAB_LATEST;
+  config.fb_location = CAMERA_FB_IN_PSRAM;
+  config.jpeg_quality = 10;
+  config.fb_count = 2;</pre>
+            </div>
+        </code>
+        <p>Camera configuration. I won't go into the specifics of everything, but the most important parts are that <code>.frame_size</code> specifies the resolution and <code>.jpeg_quality</code> specifies the quality of the image. These settings tend to differ depending on the specs of your board, specifically PSRAM.</p>
+
+        <code>
+            <div>
+                <pre>  esp_err_t err = esp_camera_init(&config);
+  if (err != ESP_OK) {
+    Serial.printf("Camera init failed with error 0x%x", err);
+    ESP.restart();
+  }</pre>
+            </div>
+        </code>
+        <p>Initialize the camera.</p>
+
+        <code>
+            <div>
+                <pre>  // Route for web page and image
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(200, "text/html", index_html);
+  });
+
+  server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, FILE_PHOTO, "image/jpg", false);
+  });
+
+  // Take a photo when /capture request is given
+  server.on("/capture", HTTP_GET, [](AsyncWebServerRequest * request) {
+    takeNewPhoto = true;
+    request->send(200, "text/plain", "Taking Photo");
+  });</pre>
+            </div>
+        </code>
+        <p>This is a very important part of the sketch. Basically, the webserver communicates to the ESP32 via web requests. I don't completely understand how this works, but my top level comprehension is that we are telling the ESP32 to pay attention to certain requests at certain URLS. If we recieve such a request, then we run a certain snippet of code.</p>
+        <p>For example, in the <code>/capture</code> request, the ESP32 is looking for a request at <code>/capture</code>. Upon recieving this request, it sets the global variable <code>takeNewPhoto</code> to true so that we can take a photo. We also send some information back.</p>
+
+        <code>
+            <div>
+                <pre>  server.begin();
+
+  Serial.println("Warming up camera and getting initial image");
+  capturePhotoSaveSpiffs();
+  delay(4000); // Prevents the image from being dark and green.
+  capturePhotoSaveSpiffs();
+}
+</pre>
+            </div>
+        </code>
+        <p>We have now reached the end of the <code>setup()</code> function. Here, we take a photo, wait a couple of seconds, and then take another picture. My goal was there to be a picture on the webserver whenever we press the reset button, so we need to take a picture at the the <code>setup()</code> stage. However, the first picture it takes is always green, dark, and noisy so we have to take another.</p>
+
+        <code>
+            <div>
+                <pre>void loop() {
+  if (takeNewPhoto) {
+    capturePhotoSaveSpiffs();
+    takeNewPhoto = false;
+  }
+  delay(1);
+}</pre>
+            </div>
+        </code>
+        <p>In our loop, we just need to watch for when <code>takeNewPhoto</code> is true and then take a picture. Remember that a web request from the webserver will cause <code>takeNewPhoto</code> to be true.</p>
+
+        <code>
+            <div>
+                <pre>bool checkPhoto( fs::FS &fs ) {
+  File f_pic = fs.open( FILE_PHOTO );
+  unsigned int pic_sz = f_pic.size();
+  return ( pic_sz > 100 );
+}</pre>
+            </div>
+        </code>
+        <p>This is a simple helper function to check that the camera is working correctly. The test is pretty rudimentary and just checks that the picture is greater than a some arbitrary size.</p>
+
+        <code>
+            <div>
+                <pre>void capturePhotoSaveSpiffs( void ) {
+  camera_fb_t * fb = NULL;
+  bool success = 0;
+
+  do {
+    // Take a photo with the camera
+    Serial.println("Taking a photo...");
+
+    fb = esp_camera_fb_get();
+    if (!fb) {
+      Serial.println("Camera capture failed");
+      return;
+    }
+
+    Serial.printf("Picture file name: %s\n", FILE_PHOTO);
+    File file = SPIFFS.open(FILE_PHOTO, FILE_WRITE);
+
+    if (!file) {
+      Serial.println("Failed to open file in writing mode");
+    }
+    else {
+      file.write(fb->buf, fb->len); // Payload (image), Payload length
+      Serial.print("The picture has been saved in ");
+      Serial.print(FILE_PHOTO);
+      Serial.print(" - Size: ");
+      Serial.print(file.size());
+      Serial.println(" bytes");
+    }
+    
+    file.close();
+    esp_camera_fb_return(fb);
+
+    // Check if file has been correctly saved in SPIFFS
+    success = checkPhoto(SPIFFS);
+  } while ( !success );
+}</pre>
+            </div>
+        </code>
+        <p>The last bit of code actually takes a picture with the camera. It's programmed in such a way that it'll constatnly try to take a photo until it's successful. <code>esp_camera_fb_get();</code> is the thing that actually makes the camera take a picture and all of the complicated image processing stuff has been abstracted away!</p>
+
+        <p>The rest of the function goes into storing the image into non volatile memory with SPLIFFS.</p>
+
+         <h3><b><i>And that's it!</i></b> You can see all the raw code <a href="./rawcode.html">here</a>.</h3>
+
+        <h2>Image quality comparisons</h2>
+
+        <p>Which one do you think is the best?</p>
+
+        <img style="transform: rotate(90deg); object-fit: cover; width: 700px; height: 700px" src="./Assets/quality5.jpg" alt="">
+        <p class="caption">config.jpeg_quality = 5;</p>
+        <img style="transform: rotate(90deg); object-fit: cover; width: 700px; height: 700px" src="./Assets/quality10.jpg" alt="">
+        <p class="caption">config.jpeg_quality = 10;</p>
+        <img style="transform: rotate(90deg); object-fit: cover; width: 700px; height: 700px" src="./Assets/quality15.jpg" alt="">
+        <p class="caption">config.jpeg_quality = 15;</p>
+        <img style="transform: rotate(90deg); object-fit: cover; width: 700px; height: 700px" src="./Assets/quality20.jpg" alt="">
+        <p class="caption">config.jpeg_quality = 20;</p>
+        <img style="transform: rotate(90deg); object-fit: cover; width: 700px; height: 700px" src="./Assets/quality50.jpg" alt="">
+        <p class="caption">config.jpeg_quality = 50;</p>
+
+        <p>
+            According to documentation, the lower the jpeg_quality, the better the image should look. I can't really tell between 5 to 15 though.
+        </p>
+
+        <h2 class="secondary">Notes:</h2>
+        <ul class="secondary">            
+            <li>
+                SPIFFS (Serial Peripheral Interface Flash File System) is ESP32's persistent file storage system. Once written upon flashing, the stuff in SPIFFS is preserved even when the device is rebooted. Think of non volatile memory, but written only at flash.
+            </li>
+            <li>
+                The ESP32 communicates to the webserver via requests. When a request is sent to a specific URL, we can execute some piece of code. For example, when a request is recieved on the root URL, the sketch sends the HTML of the webpage. Need to do more reading on this.
+            </li>
+            <li>
+                What is happening with <span class="code">task_wdt: esp_task_wdt_reset(707): task not found</span>?? Doesn't seem to be affecting anything though.
+            </li>
+        </ul>
+        <i class="secondary caption">My notes might be blatantly wrong—all of it is just my interpretation of documentation.</i>
+
+        <h2>Reflection</h2>
+        <p>
+            This assignment taught me a lot about the ESP32-CAM module and ESP32 programming in general. However, it's also made me think about the scale of my final project—it might be too simple! If I can make a pretty effective point-and-shoot camera in a couple of days and a ESP32-CAM module, I might need to increase the complexity of my project to make it more interesting. I'm thinking of adding a receipt printer to print the images or maybe even designing a board with a better camera/chip (which means no more ESP32??!). I'm stil not entirely sure where I want to go with my project now that I've taken the first steps towards making it.
+        </p>
+
+        <p>
+            I did have a lot of fun this week though and am pretty satisfied with the outcome of this assignment!
+        </p>
+
+        <h2>Pictures</h2>
+        <div id="slideshow1" class="slideshow-container">
+          <div class="slides"> <img src="./Assets/image1.png" alt=""> </div>
+          <div class="slides"> <img src="./Assets/image2.png" alt=""> </div>
+          <div class="slides"> <img src="./Assets/image3.png" alt=""> </div>
+          <div class="slides"> <img src="./Assets/image4.png" alt=""> </div>
+          <div class="slides"> <img src="./Assets/image5.png" alt=""> </div>
+
+          <a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+          <a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+        </div>
+
+        
+    <script src="../slideshow.js"></script>
+  </body>
+
+  <footer>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="">Work</a>
+    <a href="../about.html">About</a>
+    <div id="contact-info">
+      <a href="">vlee@college.harvard.edu</a>
+      <a href="">617 817 0330</a>
+    </div>
+  </footer>
+</html>

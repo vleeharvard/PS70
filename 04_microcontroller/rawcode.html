@@ -1,0 +1,264 @@
+<head><link rel="stylesheet" href="../style.css"></head>
+
+<pre><code style="background-color: transparent;"><div>#include "WiFi.h"
+#include "esp_camera.h"
+#include "esp_timer.h"
+#include "img_converters.h"
+#include "Arduino.h"
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+#include "driver/rtc_io.h"
+#include &lt;ESPAsyncWebServer.h&gt;
+#include &lt;SPIFFS.h&gt;
+#include &lt;FS.h&gt;
+
+// A lot of the setup/prerequisite code is coming from different example sketches. If it looks important, I've copied it over.
+
+// ----------------------------------------
+// Prerequisites
+// ----------------------------------------
+
+const char* ssid = "MAKERSPACE";
+const char* password = "12345678";
+
+AsyncWebServer server(80);
+
+bool takeNewPhoto = false;
+
+#define FILE_PHOTO "/photo.jpg"
+
+// ----------------------------------------
+// Camera pins
+// ----------------------------------------
+
+#define PWDN_GPIO_NUM  32
+#define RESET_GPIO_NUM -1
+#define XCLK_GPIO_NUM  0
+#define SIOD_GPIO_NUM  26
+#define SIOC_GPIO_NUM  27
+
+#define Y9_GPIO_NUM    35
+#define Y8_GPIO_NUM    34
+#define Y7_GPIO_NUM    39
+#define Y6_GPIO_NUM    36
+#define Y5_GPIO_NUM    21
+#define Y4_GPIO_NUM    19
+#define Y3_GPIO_NUM    18
+#define Y2_GPIO_NUM    5
+#define VSYNC_GPIO_NUM 25
+#define HREF_GPIO_NUM  23
+#define PCLK_GPIO_NUM  22
+
+// ----------------------------------------
+// Website HTML
+// ----------------------------------------
+
+const char index_html[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE HTML&gt;&lt;html&gt;
+&lt;head&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;style&gt;
+    @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap');
+    :root {
+      --background-color: #181818;
+      --primary-text-color: #dedede;
+      --secondary-text-color: #6a6a6a;
+      --accent-color: #FFFFFF;
+      font-family: Lato;
+    }
+    body {
+      text-align:center; 
+      background-color: var(--background-color);
+    }
+    html { color: var(--primary-text-color); }
+    button {
+      cursor: pointer;
+      background-color: var(--primary-text-color);
+      border-radius: 5px;
+      border: none;
+      padding: 7px;
+      color: var(--background-color);
+    }
+    p { font-size: 16px; }
+    img {
+      transform: rotate(90deg);
+      object-fit: cover;
+      width: 700px;
+      height: 700px;
+    }
+    h1 { font-weight: 900; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="container"&gt;
+    &lt;h1&gt;ESP32-CAM&lt;/h1&gt;
+    &lt;p&gt;
+      &lt;button onclick="capturePhoto()"&gt;CAPTURE ANOTHER PHOTO&lt;/button&gt;
+      &lt;button onclick="location.reload();"&gt;REFRESH PAGE&lt;/button&gt;
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div&gt;&lt;img src="saved-photo" id="photo" width="70%"&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;script&gt;
+  var deg = 0;
+  function capturePhoto() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "/capture", true);
+    xhr.send();
+  }
+&lt;/script&gt;
+&lt;/html&gt;)rawliteral";
+
+// ----------------------------------------
+// Setup()
+// ----------------------------------------
+
+void setup() {
+  Serial.begin(115200);
+  Serial.setDebugOutput(true);
+  Serial.println("\n\n");
+  
+  // Connect to wifi
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println();
+
+  // Mount SPIFFS
+  SPIFFS.format();
+  if (!SPIFFS.begin(true)) {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    ESP.restart();
+  }
+  else {
+    delay(500);
+    Serial.println("SPIFFS mounted successfully");
+  }
+
+  // Print local IP address
+  Serial.print("IP Address: http://");
+  Serial.println(WiFi.localIP());
+
+  // Camera configuration
+  camera_config_t config;
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer = LEDC_TIMER_0;
+  config.pin_d0 = Y2_GPIO_NUM;
+  config.pin_d1 = Y3_GPIO_NUM;
+  config.pin_d2 = Y4_GPIO_NUM;
+  config.pin_d3 = Y5_GPIO_NUM;
+  config.pin_d4 = Y6_GPIO_NUM;
+  config.pin_d5 = Y7_GPIO_NUM;
+  config.pin_d6 = Y8_GPIO_NUM;
+  config.pin_d7 = Y9_GPIO_NUM;
+  config.pin_xclk = XCLK_GPIO_NUM;
+  config.pin_pclk = PCLK_GPIO_NUM;
+  config.pin_vsync = VSYNC_GPIO_NUM;
+  config.pin_href = HREF_GPIO_NUM;
+  config.pin_sccb_sda = SIOD_GPIO_NUM;
+  config.pin_sccb_scl = SIOC_GPIO_NUM;
+  config.pin_pwdn = PWDN_GPIO_NUM;
+  config.pin_reset = RESET_GPIO_NUM;
+  config.xclk_freq_hz = 20000000;
+  config.frame_size = FRAMESIZE_XGA;
+  config.pixel_format = PIXFORMAT_JPEG;
+  config.grab_mode = CAMERA_GRAB_LATEST;
+  config.fb_location = CAMERA_FB_IN_PSRAM;
+  config.jpeg_quality = 10;
+  config.fb_count = 2;
+
+  esp_err_t err = esp_camera_init(&config);
+  if (err != ESP_OK) {
+    Serial.printf("Camera init failed with error 0x%x", err);
+    ESP.restart();
+  }
+
+  // Route for web page and image
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request-&gt;send(200, "text/html", index_html);
+  });
+
+  server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request-&gt;send(SPIFFS, FILE_PHOTO, "image/jpg", false);
+  });
+
+  // Take a photo when /capture request is given
+  server.on("/capture", HTTP_GET, [](AsyncWebServerRequest * request) {
+    takeNewPhoto = true;
+    request-&gt;send(200, "text/plain", "Taking Photo");
+  });
+
+  // Start server
+  server.begin();
+
+  Serial.println("Warming up camera and getting initial image");
+  capturePhotoSaveSpiffs();
+  delay(4000); // Prevents the image from being dark and green.
+  capturePhotoSaveSpiffs();
+}
+
+// ----------------------------------------
+// Loop()
+// ----------------------------------------
+
+void loop() {
+  if (takeNewPhoto) {
+    capturePhotoSaveSpiffs();
+    takeNewPhoto = false;
+  }
+  delay(1);
+}
+
+// ----------------------------------------
+// Helper functions for camera
+// ----------------------------------------
+
+// Check if photo capture was successful by size
+bool checkPhoto( fs::FS &amp;fs ) {
+  File f_pic = fs.open( FILE_PHOTO );
+  unsigned int pic_sz = f_pic.size();
+  return ( pic_sz &gt; 100 );
+}
+
+// Capture Photo and Save it to SPIFFS
+void capturePhotoSaveSpiffs( void ) {
+  camera_fb_t * fb = NULL;
+  bool success = 0;
+
+  do {
+    // Take a photo with the camera
+    Serial.println("Taking a photo...");
+
+    fb = esp_camera_fb_get();
+    if (!fb) {
+      Serial.println("Camera capture failed");
+      return;
+    }
+
+    Serial.printf("Picture file name: %s\n", FILE_PHOTO);
+    File file = SPIFFS.open(FILE_PHOTO, FILE_WRITE);
+
+    if (!file) {
+      Serial.println("Failed to open file in writing mode");
+    }
+    else {
+      file.write(fb-&gt;buf, fb-&gt;len); // Payload (image), Payload length
+      Serial.print("The picture has been saved in ");
+      Serial.print(FILE_PHOTO);
+      Serial.print(" - Size: ");
+      Serial.print(file.size());
+      Serial.println(" bytes");
+    }
+    
+    file.close();
+    esp_camera_fb_return(fb);
+
+    // Check if file has been correctly saved in SPIFFS
+    success = checkPhoto(SPIFFS);
+  } while ( !success );
+}</div></code></pre>
+
+

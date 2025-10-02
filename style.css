@@ -1,10 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 :root {
   --background-color: #181818;
   --primary-text-color: #dedede;
   --secondary-text-color: #6a6a6a;
+  --tertiary-text-color: #2f2f2f;
   --accent-color: #FFFFFF;
-  font-family: Lato;
+  font-family: "Lato";
 }
 
 *,
@@ -226,4 +229,18 @@ footer a {
   width: 25vw;
   height: 50vh;
   object-fit: cover;
+}
+
+code {
+  text-align: left;
+  font-family: "Roboto Mono";
+  background-color: var(--tertiary-text-color);
+  border-radius: 5px;
+  padding: 0px 5px;
+  margin-bottom: 2rem;
+}
+
+code div {
+  padding: 1rem;
+  background-color: var(--tertiary-text-color);
 }
