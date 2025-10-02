@@ -236,7 +236,7 @@ code {
   font-family: "Roboto Mono";
   background-color: var(--tertiary-text-color);
   border-radius: 5px;
-  padding: 0px 5px;
+  padding: 0px 5px 3px 5px;
   margin-bottom: 2rem;
 }
 

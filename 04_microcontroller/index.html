@@ -380,6 +380,9 @@ bool takeNewPhoto = false;
             <li>
                 What is happening with <span class="code">task_wdt: esp_task_wdt_reset(707): task not found</span>?? Doesn't seem to be affecting anything though.
             </li>
+            <li>
+                When using mobile hotspot, make sure to turn on Maximize Compatibility in settings.
+            </li>
         </ul>
         <i class="secondary caption">My notes might be blatantly wrong—all of it is just my interpretation of documentation.</i>
 
@@ -393,15 +396,21 @@ bool takeNewPhoto = false;
         </p>
 
         <h2>Pictures</h2>
+        <p>All of these were taken on the ESP-32 CAM with <code>.jpeg_quality = 10</code></p>
         <div id="slideshow1" class="slideshow-container">
-          <div class="slides"> <img src="./Assets/image1.png" alt=""> </div>
-          <div class="slides"> <img src="./Assets/image2.png" alt=""> </div>
-          <div class="slides"> <img src="./Assets/image3.png" alt=""> </div>
-          <div class="slides"> <img src="./Assets/image4.png" alt=""> </div>
-          <div class="slides"> <img src="./Assets/image5.png" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image0.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image1.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image2.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image3.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image4.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image5.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image6.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image7.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image8.jpg" alt=""> </div>
+          <div class="slides"> <img style="transform: rotate(90deg);" src="./Assets/image9.jpg" alt=""> </div>
 
-          <a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
-          <a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+          <a class="prev" style="color: var(--primary-text-color);" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+          <a class="next" style="color: var(--primary-text-color);" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
         </div>
 
         
