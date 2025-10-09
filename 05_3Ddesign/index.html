@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Victor Lee's PS70</title>
+    <link rel="stylesheet" href="../style.css">
+  </head>
+
+  <nav>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="../index.html#work">Work</a>
+    <a href="../about.html">About</a>
+  </nav>
+
+  <body>
+    <section class="blog">
+
+        <h1>Week 5: 3D Design</h1>
+
+        <img src="./Assets/Planetary.png" alt="">
+
+        <p>
+          When we were given the task to design something impossible to manufacture using traditional techniques, I immediately jumped to two things: infill and a planetary gearbox with herringbone gears. Regarding the former, the complex geometry of infill is something that I'd imagine is very difficult to recreate using subtractive manufacturing. As for the latter, a planetary gearbox with herringbone gears can only be made as one collective assembly: it just isn't physically possible to combine each of the seperate parts due to the nature of herringbone gears.
+        </p>
+
+        <h2>Herringbone gears</h2>
+
+        <div class="image-duo">
+          <img src="./Assets/HerringboneGear.png" alt="">
+          <img src="./Assets/HerringboneFlooring.jpg" alt="">
+        </div>
+        <p class="caption">Herringbone gear compared to herringbone flooring</p>
+
+        <p>
+          Herringbone gears (AKA double helical gears) are special kind of gear that has restricted movement along the axis of it's rotation when it's paired with another gear. It's hard to describe this with words, but a picture will makes it obvious how it's geometry does this:
+        </p>
+
+        <img src="./Assets/HerringbonePair.png" alt="">
+        <p class="caption">The "V" geometry restricts the side to side movement. Pretty neat!</p>
+
+        <p>
+          Since we can't move a pair of herringbone gears side to side, it's impossible to assemble a herringbone planetary gearbox from its individual pieces since we can't just slide a gear in.
+        </p>
+
+        <p>
+          However, they also come with a bunch of annoying calculations if you want things to work.
+        </p>
+        
+        <h2>Things to remember when creating planetary gearboxes:</h2>
+
+        <ul>
+          <li>
+            Number of teeth on the ring = number of teeth on the sun + 2 * number of teeth on the planetary
+          </li>
+          <li>
+            Rotation of the sun gear = 360 / (number of teeth on the planet + number of teeth on the sun)
+          </li>
+          <li>
+            Distance between centerpoints of the two gears should be the sum of their pitch circle diameters.
+          </li>
+          <li>
+            Keep the module and angle of the helix consistent between gears. Otherwise, they won't mesh together!
+          </li>
+          <li>
+            For gears that need to mesh, the "V"s should point in the same direction.
+          </li>
+        </ul>
+
+        <p>
+          Tolerancing will take some trial and error and is slightly different for different printers.
+        </p>
+
+        <img src="./Assets/mechanism.gif" alt="">
+
+        <p>
+          <a href="https://cad.onshape.com/documents/3a228b578667e08a9e8bb9eb/w/1ca4d35bba93d981e21d0447/e/d80ab7c5a9ed47f7ce6eede2?renderMode=0&uiState=68e7e4a016dba43d34a15bbd">Here's the link to the Onshape document!</a>
+          <a href="./Assets/HerringbonePlanetaryGearbox.stl">Here's the link to the STL!</a>
+          <a href="./Assets/HerringboneGearbox.gcode">Here's the link to the Gcode!</a>
+        </p>
+
+        <h2>Images</h2>
+        <div id="slideshow1" class="slideshow-container">
+          <div class="slides"> <img src="./Assets/bottomfar.JPG" alt=""> </div>
+          <div class="slides"> <img src="./Assets/bottomclose.JPG" alt=""> </div>
+          <div class="slides"> <img src="./Assets/topfar.JPG" alt=""> </div>
+          <div class="slides"> <img src="./Assets/topclose.JPG" alt=""> </div>
+          <div class="slides"> <img src="./Assets/print.JPG" alt=""> </div>
+          
+          <a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+          <a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+        </div>
+
+        <h3>3D Scanning</h3>
+        <img src="./Assets/Snorlax.png" alt="">
+        <p>I created 3D scan of Shyla's lego snorlax using a Revo Scanner. The process is a bit tedious and inaccurate, but it's pretty neat.</p>
+
+    </section>
+    <script src="../slideshow.js"></script>
+  </body>
+
+  <footer>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="">Work</a>
+    <a href="../about.html">About</a>
+    <div id="contact-info">
+      <a href="">vlee@college.harvard.edu</a>
+      <a href="">617 817 0330</a>
+    </div>
+  </footer>
+</html>
