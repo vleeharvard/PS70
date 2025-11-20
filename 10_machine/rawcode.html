@@ -1,0 +1,299 @@
+<head><link rel="stylesheet" href="../style.css"></head>
+
+<pre><code style="background-color: transparent;"><div>#include "WiFi.h"
+#include <AccelStepper.h>
+#include <vector>
+ 
+// Define a stepper and the pins it will use
+#define LINEAR_STEP_PIN 27
+#define LINEAR_DIR_PIN 14
+#define ROTATIONAL_STEP_PIN 33
+#define ROTATIONAL_DIR_PIN 32
+#define LIMIT_SWITCH_PIN 34
+#define HALL_EFFECT_PIN 39
+
+#define LIN_HOMING_SPEED 4000
+#define LIN_HOMING_ACCEL 1000
+#define HOMING_DISTANCE -9999999
+#define HOMING_ADJUST 200
+
+#define ROT_HOMING_LIN_SPEED 8000
+#define ROT_HOMING_LIN_ACCEL 2000
+#define ROT_HOMING_ROT_SPEED 200
+
+#define ZERO_LIN_SPEED 8000
+#define ZERO_LIN_ACCEL 2000
+#define ZERO_ROT_SPEED 500
+#define ZERO_ROT_ACCEL 100
+
+#define MAX_LINEAR_DISTANCE 104650
+#define FULL_CIRCLE_DISTANCE 11700
+
+AccelStepper linear_stepper(AccelStepper::DRIVER, LINEAR_STEP_PIN, LINEAR_DIR_PIN);
+AccelStepper rotational_stepper(AccelStepper::DRIVER, ROTATIONAL_STEP_PIN, ROTATIONAL_DIR_PIN);
+
+void setup()
+{  
+  Serial.begin(115200);
+  pinMode(LIMIT_SWITCH_PIN, INPUT_PULLUP);
+}
+
+enum State {
+  HOME_ROTATIONAL_AXIS,
+  HOME_LINEAR_AXIS,
+  REPEATED_CIRCLES_DEMO,
+  SPIRAL_DEMO,
+  PIZZA_DEMO,
+  WAVE_DEMO,
+  CIRCLE_TEST
+};
+State current_state = HOME_LINEAR_AXIS;
+
+void home_linear_axis() {
+  linear_stepper.setMaxSpeed(LIN_HOMING_SPEED);
+  linear_stepper.setAcceleration(LIN_HOMING_ACCEL);
+
+  // Set one target: move toward the switch
+  linear_stepper.moveTo(HOMING_DISTANCE);   // Only call once
+
+  Serial.println("Homing...");
+
+  std::vector<int> last_reads;
+
+  for (int i = 0; i < 100; i++) {
+    last_reads.push_back(digitalRead(LIMIT_SWITCH_PIN));
+  }
+
+  while (true) {
+    last_reads.push_back(digitalRead(LIMIT_SWITCH_PIN));
+
+    if (last_reads.size() > 100) {
+      last_reads.erase(last_reads.begin());
+    }
+
+    int sum = 0;
+    for (unsigned int i = 0; i < last_reads.size(); i++) {
+      sum += last_reads[i];
+    }
+
+    if (sum == 0) {
+      break;
+    } else {
+      linear_stepper.run();
+    }
+  }
+
+  Serial.println("Limit pressed!");
+
+  // Stop immediately
+  linear_stepper.stop();
+
+  // Set position to 0
+  linear_stepper.setCurrentPosition(0);
+  
+  linear_stepper.move(HOMING_ADJUST);
+  while(linear_stepper.distanceToGo() != 0) {
+    linear_stepper.run();
+  }
+
+  linear_stepper.setCurrentPosition(0);
+}
+
+void home_rotational_axis() {
+  linear_stepper.setMaxSpeed(ROT_HOMING_LIN_SPEED);
+  linear_stepper.setAcceleration(ROT_HOMING_LIN_ACCEL);
+
+  rotational_stepper.setMaxSpeed(ROT_HOMING_ROT_SPEED);
+  rotational_stepper.setSpeed(ROT_HOMING_ROT_SPEED);
+
+  linear_stepper.moveTo(MAX_LINEAR_DISTANCE);
+  while (linear_stepper.isRunning()) {
+    linear_stepper.run();
+  }
+
+  while (true) {
+    rotational_stepper.runSpeed();
+    if (analogRead(HALL_EFFECT_PIN) < 10) {
+      break;
+    }
+  }
+
+  Serial.println("Hall effect peaked!");
+
+  // Stop immediately
+  rotational_stepper.stop();
+
+  // Set position to 0
+  rotational_stepper.setCurrentPosition(0);
+}
+
+void both_axis_cont_demo(int lin_speed, int lin_accel, int rot_speed, int inner_rad, unsigned long timeout) {
+
+  unsigned long start = millis();
+
+  linear_stepper.setMaxSpeed(lin_speed);
+  linear_stepper.setAcceleration(lin_accel);
+
+  rotational_stepper.setSpeed(rot_speed);
+
+  int target = inner_rad;
+  linear_stepper.moveTo(target);
+  while (true) {
+    if (millis() - start > timeout) { break; }
+    if (linear_stepper.distanceToGo() == 0) {
+      if (target == MAX_LINEAR_DISTANCE) {
+        target = inner_rad;
+      } else if (target == inner_rad) {
+        target = MAX_LINEAR_DISTANCE;
+      }
+    }
+    linear_stepper.moveTo(target);
+    linear_stepper.run();
+
+    rotational_stepper.runSpeed();
+  }
+}
+
+void zero() {
+  linear_stepper.setMaxSpeed(ZERO_LIN_SPEED);
+  linear_stepper.setAcceleration(ZERO_LIN_ACCEL);
+
+  rotational_stepper.setMaxSpeed(ZERO_ROT_SPEED);
+  rotational_stepper.setAcceleration(ZERO_ROT_ACCEL);
+
+  linear_stepper.moveTo(0);
+  rotational_stepper.moveTo(0);
+  while (linear_stepper.isRunning() || rotational_stepper.isRunning()) {
+    linear_stepper.run();
+    rotational_stepper.run();
+  }
+}
+
+void move_out() {
+  linear_stepper.setMaxSpeed(ZERO_LIN_SPEED);
+  linear_stepper.setAcceleration(ZERO_LIN_ACCEL);
+
+  linear_stepper.moveTo(MAX_LINEAR_DISTANCE);
+  while (linear_stepper.isRunning()) {
+    linear_stepper.run();
+  }
+}
+
+void circle_test(int lin_speed, int lin_accel, int rot_speed, int rot_accel) {
+  
+  linear_stepper.setMaxSpeed(lin_speed);
+  linear_stepper.setAcceleration(lin_accel);
+
+  rotational_stepper.setMaxSpeed(rot_speed);
+  rotational_stepper.setAcceleration(rot_accel);
+
+  // Trace outer circle
+  linear_stepper.moveTo(MAX_LINEAR_DISTANCE);
+  while (linear_stepper.isRunning()) {
+    linear_stepper.run();
+  }
+
+  rotational_stepper.moveTo(FULL_CIRCLE_DISTANCE);
+  while (rotational_stepper.isRunning()) {
+    rotational_stepper.run();
+  }
+
+  // Trace middle circle
+  linear_stepper.moveTo(MAX_LINEAR_DISTANCE / 2);
+  while (linear_stepper.isRunning()) {
+    linear_stepper.run();
+  }
+
+  rotational_stepper.moveTo(0);
+  while (rotational_stepper.isRunning()) {
+    rotational_stepper.run();
+  }
+
+  // Trace center line
+  linear_stepper.moveTo(0);
+  while (linear_stepper.isRunning()) {
+    linear_stepper.run();
+  }
+
+  rotational_stepper.moveTo(FULL_CIRCLE_DISTANCE);
+  while (rotational_stepper.isRunning()) {
+    rotational_stepper.run();
+  }
+}
+
+void line_demo(int lin_speed, int lin_accel, int rot_speed, int rot_accel, int num_lines) {
+  linear_stepper.setMaxSpeed(lin_speed);
+  linear_stepper.setAcceleration(lin_accel);
+
+  rotational_stepper.setMaxSpeed(rot_speed);
+  rotational_stepper.setAcceleration(rot_accel);
+
+  int increment = FULL_CIRCLE_DISTANCE / num_lines;
+  for (int i = 0; i < num_lines; i++) {
+
+    linear_stepper.moveTo(MAX_LINEAR_DISTANCE);
+    while (linear_stepper.isRunning()) {
+      linear_stepper.run();
+    }
+
+    rotational_stepper.moveTo(increment * i);
+    while (rotational_stepper.isRunning()) {
+      rotational_stepper.run();
+    }
+
+    linear_stepper.moveTo(0);
+    while (linear_stepper.isRunning()) {
+      linear_stepper.run();
+    }
+  }
+}
+
+void loop()
+{
+  switch (current_state) {
+    case HOME_LINEAR_AXIS:
+      home_linear_axis();
+      current_state = HOME_ROTATIONAL_AXIS;
+      break;
+
+    case HOME_ROTATIONAL_AXIS:
+      home_rotational_axis();
+      current_state = WAVE_DEMO;
+      break;
+
+    case REPEATED_CIRCLES_DEMO:
+      zero();
+      both_axis_cont_demo(6000, 2000, 200, 0, 600000);
+      current_state = SPIRAL_DEMO;
+      break;
+
+    case SPIRAL_DEMO:
+      zero();
+      both_axis_cont_demo(150, 250, 200, 0, 600000);
+      current_state = PIZZA_DEMO;
+      break;
+
+    case PIZZA_DEMO:
+      zero();
+      line_demo(6000, 2000, 150, 75, 8);
+      current_state = WAVE_DEMO;
+      break;
+
+    case WAVE_DEMO:
+      zero();
+      move_out();
+      both_axis_cont_demo(6000, 6000, 200, (2 * MAX_LINEAR_DISTANCE / 3), 600000);
+      current_state = PIZZA_DEMO;
+      break;
+
+    case CIRCLE_TEST:
+      zero();
+      circle_test(5000, 2500, 200, 100);
+      break;
+
+  }
+    
+  linear_stepper.run();
+}</div></code></pre>
+
+
