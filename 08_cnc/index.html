@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Victor Lee's PS70</title>
+    <link rel="stylesheet" href="../style.css">
+  </head>
+
+  <nav>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="../index.html#work">Work</a>
+    <a href="../about.html">About</a>
+  </nav>
+
+  <body>
+    <section class="blog">
+
+      <h1>Week 8: CNC</h1>
+      
+      <img src="./Assets/PCB.png" alt="">
+
+      <p>Since I was working on my MVP on CNC week, I decided to make up this assignment by prototyping different capacitive sensor wheels.</p>
+
+      <h3>Design</h3>
+
+      <p>
+        I designed each capacitive wheel prototype in KiCad. I began with a octogonal design but later switched to circles since they were more aesthetically pleasing and more intuitive to use.
+      </p>
+
+      <div id="slideshow1" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/front.png" alt=""> </div>
+        <div class="slides"> <img src="./Assets/back.png" alt=""> </div>
+        
+        <a class="prev" style="color: #dedede;" onclick="plusSlides(-1, 'slideshow1')">&#10094;</a>
+        <a class="next" style="color: #dedede;" onclick="plusSlides(1, 'slideshow1')">&#10095;</a>
+      </div>
+
+      <h3>Manufacturing</h3>
+
+      <p>Here's exactly what you need to do to mill a <b>double sided</b> PCB in the shop:</p>
+
+      <p><b>After sending instructions to the machine, wait 5 SECONDS before opening the lid.</b> If you don't you'll need to restart the machine.</p>
+      <ol>
+        <li>Generate gerber and drill files with front copper, back copper, and edge cuts.</li>
+        <li>Go to <a href="https://quentinbolsee.pages.cba.mit.edu/gerber2img/">gerber2img</a>. Select black and white.</li>
+        <li>Upload the <code>[...]-PTH.drl</code> and <code>[...]-Edge_Cuts.gbr</code> <i>simultaneously</i> and lock the dimensions and orign</li>
+        <li>Download this render.</li>
+        <li>Don't refresh. Upload the front copper and download the render.</li>
+        <li>Upload the back copper and download the render.</li>
+        <li>Install <a href="https://github.com/bob-mccarthy/flip-pcb">flip-pcb</a> using the instruction in the git repository.</li>
+        <li>Launch flip pcb.</li>
+        <li>Upload the edge/drill png to "Outline".</li>
+        <li>Upload the front png to "Front Copper".</li>
+        <li>Upload the back png to "Back Copper".</li>
+        <li>You shouldn't need to change the drill size. Hit "generate boards" and upload them to a USB.</li>
+        <li>Go to the PCB CNC machine next to the soldering station. Using double sided tape, tape down a FR1 board. Try your best to align it to the close left corner. Make sure its as flat as possible.</li>
+        <li>Turn on your CNC machine and connect to it on <a href="https://leomcelroy.com/bitrunner/">bitrunner</a> using the button on the top right corner.</li>
+        <li>Upload your front copper PNG by dragging it in.</li>
+        <li>Swap the bit in the machine for a V bit using the allen key attached to the machine via magnet. You shouldn't need a lot of force to tighen the bit. Give it a little tug to be secure. Put it a little high, you'll need to drop it to level the machine.</li>
+        <li>Using the tool controls, move to the tool to a couple millimeters away from the close left corner.</li>
+        <li>Click "Move Job to Pointer". This point is now your origin.</li>
+        <li>Using the tool controls, try to get the bit to be just above the FR1 board.</li>
+        <li>Loosen the bit and let it drop to your piece. These bits are very delicate so you shouldn't let them drop too far or hard. However, don't press the bit into the FR1 board. The bit is leveled when it comfortably rests ontop of the board. Retighten the bolt.</li>
+        <li>Make sure you move the bit up when moving the tool around from now on. Make sure that your PCB fits within the board (move the red pointer to and use "Move Tool to Pointer" to check each corner of ur PCB)</li>
+        <li>Select the "Circuit Traces (1/64 in)" preset and click "Generate Toolpath".</li>
+        <li>Click "Start Cut".</li>
+        <li>Using the Z controls, make sure that the bit is <i>just</i> touching the material. This should be at the Z height you found when you leveled the bit with the dropping earlier.</li>
+        <li>Start the cut and wait for it to finish.</li>
+        <li><b>DO NOT REFRESH THE PAGE.</b> Drag in your <b>front</b> outline file.</li>
+        <li>Swap the bit for a 32 mill drilling bit (not V shaped) using the allen key again. It may be helpful to move the toolhead up.</li>
+        <li>Move the bit as close to an <b>UNCUT</b> piece of copper as possible. This does not have to be at the origin.</li>
+        <li>Level the bit using the dropping method as described above.</li>
+        <li>Use the "Circut Outline (1/32 in)" preset and click generate toolpaths. It may be necessary to lower the tool diameter very slightly if some of your holes aren't being drilled.</li>
+        <li>Click "Start Cut". Make sure your bit is <i>just</i> touching the material again.</li>
+        <li>Start the cut and wait once more.</li>
+        <li>Now, if you have a double sided PCB (which you should if you did the Flip PCB step), pry off the cut-out PCB (<b>NOT</b> the outside material). Remove the tape on the bottom side. Leave the rest of the FR1 board on the machine for alignment purposes.</li>
+        <li>Flip the PCB <b>horizontally</b> making sure that things align with the PCB you're about to cut. There should be some flaps on the edges of the cutout PCB and leftover material that will help you align your PCB</li>
+        <li>Tape it down.</li>
+        <li>Now, repeat the steps for the front of the board (dragging in image, swapping and leveling bits, generating toolpaths with presets) for the back copper and back outline of.</li>
+        <li>After that, your double sided PCB should be done!</li>
+      </ol>
+
+      <p>
+        These PCBs were milled in the lab using the CNC mill for PCBs. I was able to use <a href="https://quentinbolsee.pages.cba.mit.edu/gerber2img/">gerber2img</a> and Bobby's <a href="https://github.com/bob-mccarthy/flip-pcb">flip pcb</a> script to generate the necessary PNGs for milling. Double sided PCBs require a little extra work since the PCB must aligned properly after flipping.
+      </p>
+
+      <p>
+        Fortunately, the process is quite straightforward thanks to the tools developed for this process. I then used <a href="https://leomcelroy.com/bitrunner/">BitRunner</a> to generate the toolpaths to actually mill them.
+      </p>
+
+      <h3>Post Processing</h3>
+
+      <p>For two iterations, I needed to spend quite a bit of time scraping off copper that wasn't properly removed by the CNC. A multimeter really helped with this process. Even though I increased the clearance between traces, if the FR1 board isn't perfectly flat, there ends up being regions with some leftover copper that can cause shorts.</p>
+
+      <p>Then, I had to solder my own vias. This was by far the most tedious thing I've ever soldered. With no soldermask to save me, this really tested my soldering skills and patience. Again, I had to use a multimeter to ensure that there were no shorts. The issues that happened in my first and second iteration motivated me to increase track clearances in my third iteration.</p>
+
+      <h3>Reflection</h3>
+      
+      <p>I'm pretty happy with how my self-milled PCBs turned out. Being able to mill my own PCBs makes iteration a lot quicker, even if its only for simple parts. My third iteration worked great for my <a href="../13_finalproject/index.html">ipod prototype</a> and I used the exact same design in my final PCB. I definetly know I'll be doing a lot more of this in the future since its always a good idea to test a design before spending hundreds of dollars on shipping and tarrifs for JLCPCB to make it.</p>
+
+    </section>
+    <script src="../slideshow.js"></script>
+  </body>
+
+  <footer>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="">Work</a>
+    <a href="../about.html">About</a>
+    <div id="contact-info">
+      <a href="">vlee@college.harvard.edu</a>
+      <a href="">617 817 0330</a>
+    </div>
+  </footer>
+</html>

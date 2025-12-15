@@ -243,4 +243,19 @@ code {
 code div {
   padding: 1rem;
   background-color: var(--tertiary-text-color);
+  font-size: 1.2rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  }
+
+th, td {
+  border: 1px solid var(--primary-text-color);
+  padding: 5px 8px;
+  text-align: left;
 }

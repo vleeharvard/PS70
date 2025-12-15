@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Victor Lee's PS70</title>
+    <link rel="stylesheet" href="../style.css">
+  </head>
+
+  <nav>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="../index.html#work">Work</a>
+    <a href="../about.html">About</a>
+  </nav>
+
+  <body>
+    <section class="blog">
+
+      <h1>Final Project</h1>
+
+      <a style="margin: auto;" href="https://www.youtube.com/watch?v=lEchq6PTFLk">
+        <iframe width="704" height="396"
+          src="https://www.youtube.com/watch?v=lEchq6PTFLk">
+        </iframe> 
+
+        <p>Click here if the video doesn't work!</p>
+      </a>
+
+
+      <p>
+        After switching my final project idea about three times I finally settled on creating a clone of Apple's ipod.
+      </p>
+
+      <h2>Specifications</h2>
+
+        <ul>
+          <li>ESP32-S3-WROOM Module</li>
+          <li>MAX98357A Class D I2S Amplifier</li>
+          <li>MCP73871T Battery Regulation IC</li>
+          <li>32Gb MicroSD Card</li>
+          <li>128 x 64 SSD1309 I2C OLED Display</li>
+          <li>USB Type C Port</li>
+          <li>3.5 mm Aux Jack</li>
+          <li>Mono, 44100hz, 16-bit .wav Playback</li>
+        </ul>
+
+      <h2>Project Selection & Brainstorming</h2>
+
+      <p>
+        As someone interesting in decentralizing my tech, I wanted my final project to be a portable device that could replace some function of my phone. I also decided to avoid using libraries that abstracted audio playback since I wanted to understand exactly what my code is doing (and because it's funner to program things yourself). I ultimately wanted to create a custom PCB as well. 
+      </p>
+
+      <p>
+        At the start of the year, I planned on create an ESP32 powered digicam. However, after completing the week 4 assignment, I realized that this project would be a little too simple with the ESP32-CAM. Then I pivoted to a DJ controller, which I thought would be an interesting introduction to microcontroller audio and signal processing (and I thought DJing was pretty cool at the time). As the final project deadline was coming closer and closer, I realized that I'd have to buy over $60 worth of fancy rotary encoders, slide potentiometers, and tactile buttons <i>ontop</i> of having to figuring out how to code all the fancy features of a DJ mixer and designing a PCB within a month.
+      </p>
+
+      <p>
+        Around this time, my brother e-waste dumpster dived an old ipod nano and installed custom software on it (<a href="https://en.wikipedia.org/wiki/Rockbox">Rockbox</a>) which I thought was pretty sick. The whole idea behind the digicam was to find a way for me to use my phone less, and with how much I listen to music, an ipod would be a pretty cool everyday carry. However, ipods are surprisingly expensive if you're unwilling to go dumpster diving, so I figured that creating an ipod would be a perfect (and potentially useful) final project. 
+      </p>
+
+      <p>
+        This pivot also meant that my project was much more feasible in the given time frame. At this point, I already had a decent wav player made and I knew that I could recreate the iconic capacitive touch wheel on the ipods utilizing the touch pins on the ESP32-S3 and some fancy software. I'd rather scale back a bit end up with an unfinished project!
+      </p>
+
+      <h2>Minimum Viable Project</h2>
+
+      <p>
+        Before MVP week, I was still planning on creating a DJ mixer from scratch. My minimum viable project was a simple .wav player with a TFT screen and potentiometer.
+      </p>
+
+      <p>
+        Transforming my MVP to an actual ipod was pretty straightforward—replace the rotary encoder with a capacitive sensor wheel and create an actual UI.
+      </p>
+
+      <p>
+        A couple of weeks after MVP week I began to seriously reconsider whether I wanted to continue making a DJ mixer as I looked at my eye-watering $63 dollar digikey cart full of parts that I likely wouldn't use after this project. With about a month to program the DJ software (which I had no idea whether the ESP32-S3 could support), construct a PCB, AND actually learn how to DJ, I was seriously doubting whether I could actually finish this project.
+      </p>
+
+      <p>
+        While it hurt my ego, I though that it would be best if I pivoted to an extension of my mvp: an ipod.
+      </p>
+
+      <h2>Design Process: Prototyping</h2>
+
+      <img src="./Assets/Prototype/prototypeclose.JPG" alt="">
+
+      <p>
+        The hardware necessary to play audio at "good enough" quality is actually quite simple. An ESP32, microSD card module, and I2S amp is really all I needed to play 16 bit PCM, 44100hz sample rate, mono .wav files. With the left and right audio samples interleaved, stereo audio can be achieved by connecting another mono amp and designating which sample each amp should play by supplying a specific voltage to a specific pin (I believe this process is called "hardware strapping"?). However, I quickly encountered a problem: 2 amplifiers means two negative terminals but wired earbuds only have one ground terminal. However, after some testing and reading, I learned that this was a problem that couldn't be solved without some extra hardware.
+      </p>
+
+      <p>
+        I also discovered that I'd have to significantly lower the output volume of the amplifier if I wanted to use headphones. Simply lowering the value of each sample exarcerbated the noise of the circuitry, so I resulted to a trusty voltage divider.
+      </p>
+
+      <p>
+        I also decided it was time to upgrade my solderless breadboard circuit to a soldered breadboard for more confident debugging and to have something to show at the project fair in case my PCB didn't arrive in time (it didn't arrive in time). 
+      </p>
+
+      <img src="./Assets/Prototype/prototypefront.JPG" alt="">
+
+      <p>
+        I was able to perfect the capacitive wheel, which was the most tricky component of the project, after three iterations. Testing out different shapes and spacings ensured that the core component of my ipod would feel smooth and intuitive to use. Learn more about how I was able to quickly iterate on custom pcbs on my <a href="../08_cnc/index.html">CNC week documentation</a>.
+      </p>
+
+      <img src="./Assets/Prototype/prototypeback.jpg" alt="">
+      <p class="caption">An absolute mess, this is why we need PCBs</p>
+
+      <p>
+        At this stage, I also looked into possible ways to reduce the noisyness of the amplifier through decoupling capacitors, low-value resistors, and increasing the distance between signal lines. 
+      </p>
+
+      <h2>Design Process: PCB Design</h2>
+
+      <img src="./Assets/schematic-1.png" alt="">
+
+      <p>
+        I designed my PCB with KiCad by looking through online guides and manufacturer datasheets. Despite this being the second PCB I've made, the process was actually not that bad considering the resources I had access to.
+      </p>
+
+      <h3>Microcontroller</h3>
+
+      <img src="./Assets/devkitschematic.png" alt="">
+      <p class="caption">Schematic I based my design off of</p>
+
+      <p>
+        I began by integrating my ESP32-S3 devkit by using an ESP32-S3-WROOM module. I decided not to go the SoC route since this was my first time working with ESP32s and there are a <i>LOT</i> of things I could easily mess up. I followed this <a href="https://roboticworx.io/blogs/projects/custom-esp32-boards-from-scratch-tutorial">extremely helpful blog post</a>.
+      </p>
+
+      <h3>Amplifier</h3>
+
+      <img src="./Assets/ampschematic.png" alt="">
+      <p class="caption">Thank you Adafruit!</p>
+
+      <p>
+        Integrating a MAX98357 amplifier was straightforward since Adafruit shares the schematic to their breakout boards. I looked through the datasheet to make sure I didn't miss anything and decided to include ferrite beads even though they were probably unecessary. I made sure to leave ample space between the signal lines (about 3 traces width), but theres still some noise in the system.
+      </p>
+
+      <h3>3.5mm Jack</h3>
+
+      <div class="image-duo">
+        <img src="./Assets/35jackschematic.png" alt="">
+        <img src="./Assets/headphonewiring.png" alt="">
+      </div>
+      <p class="caption">1. Sleeve contact &emsp; 2. Tip contact &emsp; 3. Ring contact</p>
+
+      <p>
+        After integrating the amp, the next thing I had to worry about was the 3.5mm aux jack. These seemed confusing at first, but they're actually quite simple. Connecting the ring and tip of the jack to the postive terminal of the amp and connecting the sleeve to the negative terminal was all I needed to do.
+      </p>
+
+      <h3>MicroSD card</h3>
+
+      <img src="./Assets/sdschematic.png" alt="">
+      <p class="caption">Thank you once again Adafruit!</p>
+
+      <img src="./Assets/sddatasheet.png" alt="">
+      <p class="caption">Useful annotated datasheet from <a href="https://forum.arduino.cc/t/how-to-use-a-micro-sd-card-reader-on-a-pcb/983182">forum post</a> showing which SD card terminal corresponds to which SPI pin</p>
+
+      <p>
+        It's also surprisingly straightforward to connect a SD card to a microcontroller through SPI. Pullup resistors, like the ones on Adafruit and my schematic, aren't even necessary. I learned it's possible to directly wire an SD card to a microcontroller with some wire and solder, which is useful if you accidently burn the pins on your SD card module like I did.
+      </p>
+
+      <h3>Battery Management</h3>
+
+      <p>
+        I decided to use the MCP73871 IC (integrated circuit) since it supports simultaneous battery charging and powering, a feature called "load sharing". The MCP73871 can power a device directly from USB power while charging the battery (also wtih USB power) reducing stress on the battery. Battery regulation ICs without load sharing risk damaging the battery. I felt like the extra 50 cents for load sharing were probably worth it.
+      </p>
+
+      <p>
+        This was by far the most intimidating part of the process since messing this up could render my PCB useless (as in, it can't get any power from USB <i>or</i> battery) or damage a lithium ion battery. With no tried and true breakout board to rely I, I very closely read the <a href="https://ww1.microchip.com/downloads/en/DeviceDoc/MCP73871-Data-Sheet-20002090E.pdf">chip's datasheet</a> and followed an <a href="https://www.instructables.com/How-to-Bring-USB-Rechargeable-LiPo-Power-to-Your-C/">instructables guide</a>.
+      </p>
+
+      <img src="./Assets/baticschematic.webp" alt="">
+
+      <h3>OLED Display</h3>
+
+      <p>
+        The <a href="https://www.amazon.com/YELUFT-2-42-inch-Display-Protective-Raspberry/dp/B0FRMFTZLB/139-6458393-5104815?pd_rd_w=e00vq&content-id=amzn1.sym.f5690a4d-f2bb-45d9-9d1b-736fee412437&pf_rd_p=f5690a4d-f2bb-45d9-9d1b-736fee412437&pf_rd_r=RWEY0QBKRP7S4XRXBFF2&pd_rd_wg=lm3I4&pd_rd_r=b1e2cf6f-da94-49f3-855a-e735663d9d75&pd_rd_i=B0FRMFTZLB&psc=1">datasheet on Amazon for my OLED</a> with dimensions for mounting holes is completely wrong! Luckily I noticed this and designed a footprint that worked.
+      </p>
+
+      <img src="./Assets/oledfootprint.png" alt="">
+      <p class="caption">Incorrect datasheets are evil.</p>      
+
+      <h3>Pitfalls/Accidents</h3>
+      
+      <p>
+        To my surprise, the PCB works! However, there are a couple slight issues that don't necessarily hinder the operation of the wav player but I feel are important to point out.
+      </p>
+
+      <ul>
+        <li>I did a lot of setup to be able to extract information about the battery (charging status, battery level) but I forgot to hook up the pins to the microcontroller.</li>
+        <li>The switch to cut off the battery doesn't work. Now you have to unscrew the case and unplug the battery to fully shut it off.</li>
+        <li>The indicator LED is waaay to bright. A 75 ohm resistor was not enough.</li>
+      </ul>
+
+      <h3>A bit about JLCPCB...</h3>
+
+      <p>Setting up proper board constraints can save future you a lot of headache. Heres my pretty generous setup that has worked well:</p>
+
+      <img src="./Assets/kicadconstraints.png" alt="">
+      <img src="./Assets/kicadnetclasses.png" alt="">
+      <img src="./Assets/kicadpredef.png" alt="">
+
+      <p>Two KiCad plugins that saved me a lot of time:</p>
+      <ul>
+        <li><a href="https://github.com/Steffen-W/Import-LIB-KiCad-Plugin#use-of-the-application">Impart GUI</a> &rarr; import symbols and footprints from JLCPCB/EasyEDA</li>
+        <li><a href="https://github.com/bouni/kicad-jlcpcb-tools">kicad-jlcpcb-tools</a> &rarr; quickly generate the files necessary for JLCPCB manufacturing (gerbers, BOM, part placement)</li>
+      </ul>
+
+      <p>And most importantly...</p>
+
+      <p>Make sure to <s>double</s> quadruple check the orientation of your ICs before assembly! I was very close to having my MAX98357A misaligned by 90 degrees, which would have rendered my entire PCB useless.</p>
+
+      <h3>Images:</h3>
+
+      <p>Here's the schematic, which describes what should be connected to what.</p>
+
+      <img src="./Assets/schematic-1.png" alt="">
+      <p class="caption">You'll see some similarities between my schematic and the references above</p>
+
+      <p>Here's the PCB layout:</p>
+      <div id="slideshow1" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/Prototype/output-1.png" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Prototype/front-1.png" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Prototype/back-1.png" alt=""> </div>
+        
+        <a class="prev" style="color: #dedede;" onclick="plusSlides(-1, 'slideshow1')">&#10094;</a>
+        <a class="next" style="color: #dedede;" onclick="plusSlides(1, 'slideshow1')">&#10095;</a>
+      </div>
+
+      <p>Here's the 3D render on Kicad:</p>
+      <div id="slideshow2" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/Prototype/modelfront.png" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Prototype/modelback.png" alt=""> </div>
+        
+        <a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+        <a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+      </div>
+
+      <h2>Design Process: Programming</h2>
+
+      <p><b>Some terminology before we begin...</b></p>
+      <ul>
+        <li><b>Sample:</b> A number representing the amplitude of an audio wave at a given time. The larger the sample size (ie. 16-bit PCM) the higher quality the audio. I used 16 bit samples, meaning I could get amplitudes from -32,768 to +32,767.</li>
+        <li><b>Frame:</b> Two samples where one of the samples goes to the left ear and the other sample goes to the right ear. I have this as a struct.</li>
+      </ul>
+      
+      <p>
+        To prevent the code for my ipod from being in one massive unorganize file, I ended up migrating to platformio and tried to make my program as modular as possible. I made extensive use of macros to ensure that I could easily tweak certain aspects of my ipod. I also needed to keep optimization in mind since the ESP32s have limited resources. <span class="caption">Yes, I know I used String objects which aren't the most optimal for memory conservation but man they are so easy to work with.</span>
+      </p>
+
+      <h3>Cacheing</h3>
+
+      <code><div><pre>
+size_t Wav_File::read_frames(Frame_t *frames, size_t num_frames) {
+    size_t frames_read = 0;
+    for (uint32_t i = 0; i < num_frames; i++) {
+        if (wav_file.available() == 0) {
+            is_empty = true;
+        }
+
+        if (cache.pos_tag + 1 >= cache.end_tag) {
+            fill_cache();
+        }
+        if (cache.pos_tag + 1 >= cache.end_tag) {
+            break;
+        }
+
+        uint8_t low = cache.cbuf[cache.pos_tag - cache.start_tag];
+        uint8_t high = cache.cbuf[cache.pos_tag - cache.start_tag + 1];
+        frames[i].left = (int16_t)(high << 8 | low) * (constrain(0, volume, 100) / 100.0f);
+        cache.pos_tag += 2;
+
+        if (num_of_chan == 1) {
+            frames[i].right = frames[i].left;
+        } else {
+            low = cache.cbuf[cache.pos_tag - cache.start_tag];
+            high = cache.cbuf[cache.pos_tag - cache.start_tag + 1];
+            frames[i].right = (int16_t)(high << 8 | low) * (constrain(0, volume, 100) / 100.0f);
+            cache.pos_tag += 2;
+        }
+        frames_read += 1;
+    }
+
+    return frames_read;
+}
+</pre></div></code>
+<p class="caption">My read_frames() function that supplies stereo/mono samples</p>
+
+      <p>
+        Audio streaming through I2S requires a constant stream of samples read directly from the wav file. By applying what I learned about cacheing through CS61, I created a wav file class that would be able be able to supply a constant stream of samples while minimizing expensive <code>File.read()</code> calls.
+      </p>
+
+
+      <h3>Writing to I2S amplifier</h3>
+
+<code><div><pre>
+size_t bytes_written;
+i2s_write(output->i2s_port,
+          (const char*)frames,
+          frames_read * sizeof(Frame_t),
+          &bytes_written,
+          portMAX_DELAY);
+</pre></div></code>
+<p class="caption">Really easy to write to my amp. We even write in 512 byte chunks!</p>
+
+      <p>
+        Following example code from this useful <a href="https://www.youtube.com/watch?v=At8PDQ3g7FQ&t=1s">youtube video</a> and the corresponding <a href="https://github.com/atomic14/esp32_audio">github repository</a> I set up I2S streaming via a FreeRTOS task. If you asked me how tasks worked I probably wouldn't be able to explain it, but writing to my I2S amp was as simple as calling <code>i2s_write()</code>. To create pausing, we simply yield the task before actually sending any samples to the amp. Selecting songs is as simple as changing which wav_file we are freading frames from. 
+      </p>
+
+      <h3>Capacitive sensors</h3>
+      <p>
+        Each pad on my touch wheel is just a capacitive sensor. By preforming a <code>analogRead()</code> and checking whether the read value is above a certain threshold, I can see whether someone's finger is touching a pad.
+      </p>
+
+      <ul>
+        <li>The wheel increments or decrements a value when a segment is pressed and its adjascent segments is also pressed within a certain time window.</li>
+        <li>Swipe controls work by checking whether the center capacitive sensor is touched and then one of the four outer rings are touched within a certain time window.</li>
+        <li>The center "button" works by checking whether the center capacitive sensor has been touched for a certain amount of time (in order to not interfere with swipings).</li>
+      </ul>
+
+<code><div><pre>
+if (btn_pressed != btn_last && (now - btn_time) > BTN_DEBOUNCE) {
+    btn_last = btn_pressed;
+    btn_time = now;
+
+    if (btn_pressed) {
+        output->paused = !output->paused;
+    }
+}        
+</pre></div></code>
+<p class="caption">Debouncing really helped the controls feel smooth</p>
+
+      <p>By experimenting with timing, sensor sensitivity, and debouncing, I was able to get the swipe controls working reasonably well. There are definetly difficulties with sensor detection on quick movements or partial touching, but the ipod is functional.</p>
+
+<code><div><pre>
+// --- Touch sensors ---
+#define NUM_SENSORS 13
+#define STORE_MS 70 // How long to store wheel state
+#define HOLD_MS 200 // How long to register button press
+#define SWIPE_MS 200 // How long to register button swipe
+
+#define BTN_DEBOUNCE 50
+#define SWP_DEBOUNCE 50
+</pre></div></code>
+<p class="caption">Macros used to tune wheel settings.</p>
+
+      <h3>User Interface</h3>
+
+<code><div><pre>
+// Song artist and playlist
+u8g2->setFont(u8g2_font_smallsimple_tr);
+u8g2->drawStr(0, 40, ("by " + cur_track->artist).c_str());
+u8g2->drawStr(0, 50, ("in " + cur_playlist->name).c_str());
+u8g2->drawStr(0, 60, (String(volume / 2) + " db").c_str());
+</pre></div></code>
+
+<p class="caption">Simple code used to display artist, playlist, and volume. Decibels (only accurate on headphones) were calculated with reference to my airpods.</p>
+      
+      <p>
+        I created a simple user interface that makes use of <code>u8g2</code> fonts. Everything is a font element, even the icon. I choose the text-ui aesthetic for coolness factor and simplicity. 
+      </p>
+
+      <img src="" alt="">
+
+      <p>
+        Inside the song selection menu, spinning the wheel changes the selected song and swiping changes the current playlist. Holding down the button selects the song.
+      </p>
+
+      <img src="" alt="">
+
+      <p>
+        During playback, spinning the wheel changes volume. Swiping horizontal switches songs. Swiping vertically opens the menu. Hodling down the button toggles pausing. I also decided to include some statistics about the current .wav file being played to fill up some empty space. I included some text indicating whether it's being powered by battery or USB to display the MCP73871T's load-sharing capabilities.
+      </p>
+
+      <h2>Design Process: Enclosure</h2>
+
+      <p>
+        I created the enclosure for both the prototype and PCB using tinted laser cut acrylic. Following the same process I did during <a href="../02_2Ddesign/index.html">box making</a> and <a href="../03_fabrication/index.html">my kinetic sculpture</a>, I used Onshape to design and generate DXFs which I brough to Rhino for post processing. I think it turned out very nicely! 
+      </p>
+
+      <div id="slideshow3" class="slideshow-container">
+
+        
+        <a class="prev" onclick="plusSlides(-1, 'slideshow3')">&#10094;</a>
+        <a class="next" onclick="plusSlides(1, 'slideshow3')">&#10095;</a>
+      </div>
+
+      <h2>Bill of Materials</h2>
+        <p>Here's the bill of materials for the PCB:</p>
+
+        <table>
+        <thead>
+          <tr>
+            <th>Count</th>
+            <th>JLCPCB #</th>
+            <th>Part</th>
+            <th>Model</th>
+            <th>Cost Per</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>C910544</td><td>I2S Amp</td><td>MAX98357AETE+T</td><td>$1.20</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C2913205</td><td>Microcontroller module</td><td>ESP32-S3-WROOM-1-N16R2</td><td>$5.13</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C165948</td><td>Usb type c port</td><td>TYPE-C-31-M-12</td><td>$0.17</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C6186</td><td>Voltage regulator</td><td>AMS1117-3.3</td><td>$0.16</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C82544</td><td>Diode on voltage regulator</td><td>1N5819HW-7-F</td><td>$0.02</td><td>Extended</td></tr>
+          <tr><td>3</td><td>C5199850</td><td>Smaller diode on voltage regulator</td><td>LESD5D5.0CT1G</td><td>$0.01</td><td>Extended</td></tr>
+          <tr><td>2</td><td>C720477</td><td>Tactile button</td><td>TS-1088-AR02016</td><td>$0.04</td><td>Basic</td></tr>
+          <tr><td>2</td><td>C88989</td><td>Ferrite bead for amp</td><td>BLM18SG331TN1D</td><td>$0.03</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C18594</td><td>3.5mm jack</td><td>PJ-320BSurface Mount</td><td>$0.05</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C266620</td><td>MicroSD card reader</td><td>TF-115</td><td>$0.13</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C511310</td><td>Battery regulation chip</td><td>MCP73871T-2CCI/ML</td><td>$1.19</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C295747</td><td>JST connector for lipo</td><td>S2B-PH-SM4-TB(LF)(SN)</td><td>$0.18</td><td>Extended</td></tr>
+          <tr><td>1</td><td>C2286</td><td>Indicator LED</td><td>KT-0603R</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C115375</td><td>Switch</td><td>SSSS213202</td><td>$0.40</td><td>Extended</td></tr>
+          <tr><td>6</td><td>C96446</td><td>10uF Capacitor</td><td>CL10A106MA8NRNC</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>7</td><td>C14663</td><td>0.1uF (100nF) Capacitor</td><td>CC0603KRX7R9BB104</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>2</td><td>C1603</td><td>220pF Capacitor</td><td>CL10B221KB8NNNC</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>3</td><td>C19666</td><td>4u7F Capacitor</td><td>CL10A475KO8NNNC</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>2</td><td>C23186</td><td>5.1k resistor</td><td>0603WAF5101T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C4275</td><td>75 resistor</td><td>0603WAF750JT5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>3</td><td>C25804</td><td>10k resistor</td><td>0603WAF1002T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C22935</td><td>1M resistor</td><td>0603WAF1004T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>3</td><td>C25803</td><td>100k resistor</td><td>0603WAF1003T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>3</td><td>C25190</td><td>27 resistor</td><td>0603WAF270JT5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>3</td><td>C4184</td><td>20k resistor</td><td>0603WAF2002T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>7</td><td>C25819</td><td>47k resistor</td><td>0603WAF4702T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C22975</td><td>2k resistor</td><td>0603WAF2001T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C22809</td><td>15k resistor</td><td>0603WAF1502T5E</td><td>$0.01</td><td>Basic</td></tr>
+          <tr><td>1</td><td>C23196</td><td>50k resistor, using 51k</td><td>0603WAF5102T5E</td><td>$0.01</td><td>Basic</td></tr>
+        </tbody>
+      </table>
+
+      <p>Besides that, I had to buy an <a href="https://www.amazon.com/dp/B0FRMFTZLB?ref=ppx_yo2ov_dt_b_fed_asin_title">128x64 I2C OLED display</a> and <a href="https://www.amazon.com/dp/B00J2QET64?ref=ppx_yo2ov_dt_b_fed_asin_title">lipo battery with a JST cable</a>.</p>
+
+      <h2>If you want to make your own...</h2>
+
+      <ul>
+        <li><a href="https://github.com/vleeharvard/not-an-ipod-KiCad">Repository with PCB files</a></li>
+        <li><a href="https://github.com/vleeharvard/not-an-ipod">Repository with code</a></li>
+        <li><a href="https://cad.onshape.com/documents/8e2eb7ded76b7b7cb0642299/w/31584204386cd39f289b1ebb/e/e0c92d86b3bdd6c572764fde">Onshape link for case designs</a></li>
+      </ul>
+
+      <p>
+        All of the necessary manufacturing files (gerber, BOM, part placement) and the KiCad project can be found on <a href="https://github.com/vleeharvard/not-an-ipod-KiCad">this github repository</a>. The <code>jlcpcb/production_files</code> has everything necessary for jlc to assembly the pcb.
+      </p>
+
+      <p>
+        Remember to properly align the ICs so that the dots on the MAX98357A and MCP73871 point down and towards each other, the generated alignment is NOT correct. The default JLCPCB manufacturing settings should be fine but make sure you assemble the back. Some hand soldering for the screen will be necessary. It cost me $8.80 to get the PCBs made, $103.65 for assembly and parts, $50.59 for expedited (1 week) shipping, and $46.11 from tariffs.
+      </p>
+
+      <p>
+        All of code for this project can be found on <a href="https://github.com/vleeharvard/not-an-ipod">this github repository</a>. Be warned, it is not very pretty. Look at the <code>src</code> directory to find the actualy c++ files. Their corresponding header files can be found in the <code>include</code> directory.
+      </p>
+
+      <h2>Image gallery</h2>
+      
+
+    </section>
+    <script src="../slideshow.js"></script>
+  </body>
+
+  <footer>
+    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+    <a href="">Work</a>
+    <a href="../about.html">About</a>
+    <div id="contact-info">
+      <a href="">vlee@college.harvard.edu</a>
+      <a href="">617 817 0330</a>
+    </div>
+  </footer>
+</html>

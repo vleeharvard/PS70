@@ -1,0 +1,6 @@
+{
+    "[html]": {
+        "editor.inlineSuggest.enabled": false,
+        "editor.quickSuggestionsDelay": 300
+    }
+}
