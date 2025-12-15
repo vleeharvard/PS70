@@ -21,7 +21,9 @@
       
       <img src="./Assets/PCB.png" alt="">
 
-      <p>Since I was working on my MVP on CNC week, I decided to make up this assignment by prototyping different capacitive sensor wheels.</p>
+      <p>
+        Since I was working on my MVP on CNC week, I decided to make up this assignment by prototyping different capacitive sensor wheels.
+      </p>
 
       <h3>Design</h3>
 
@@ -30,12 +32,23 @@
       </p>
 
       <div id="slideshow1" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/CNC/firstiter.JPG" alt=""> </div>
+        <div class="slides"> <img src="./Assets/CNC/seconditer.JPG" alt=""> </div>
+        <div class="slides"> <img src="./Assets/protowheelfront.jpg" alt=""> </div>
+        
+        <a class="prev"  onclick="plusSlides(-1, 'slideshow1')">&#10094;</a>
+        <a class="next" onclick="plusSlides(1, 'slideshow1')">&#10095;</a>
+      </div>
+
+
+      <div id="slideshow2" class="slideshow-container">
         <div class="slides"> <img src="./Assets/front.png" alt=""> </div>
         <div class="slides"> <img src="./Assets/back.png" alt=""> </div>
         
-        <a class="prev" style="color: #dedede;" onclick="plusSlides(-1, 'slideshow1')">&#10094;</a>
-        <a class="next" style="color: #dedede;" onclick="plusSlides(1, 'slideshow1')">&#10095;</a>
+        <a class="prev light" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+        <a class="next light" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
       </div>
+      <p class="caption">Final iteration</p>
 
       <h3>Manufacturing</h3>
 
@@ -94,11 +107,30 @@
 
       <p>For two iterations, I needed to spend quite a bit of time scraping off copper that wasn't properly removed by the CNC. A multimeter really helped with this process. Even though I increased the clearance between traces, if the FR1 board isn't perfectly flat, there ends up being regions with some leftover copper that can cause shorts.</p>
 
+      <img src="./Assets/CNC/multimeter.JPG" alt="">
+
+      <div class="image-duo">
+        <img src="./Assets/CNC/pokingholes.JPG" alt="">
+        <img src="./Assets/CNC/scratchingtraces.JPG" alt="">
+      </div>
+
       <p>Then, I had to solder my own vias. This was by far the most tedious thing I've ever soldered. With no soldermask to save me, this really tested my soldering skills and patience. Again, I had to use a multimeter to ensure that there were no shorts. The issues that happened in my first and second iteration motivated me to increase track clearances in my third iteration.</p>
+
+      <div class="image-duo">
+        <img src="./Assets/CNC/solderingvia.JPG" alt="">
+        <img src="./Assets/protowheelback.jpg" alt="">
+      </div>
+
+      <p class="caption">First iteration vs. second iteration, I definetly got better!</p>
 
       <h3>Reflection</h3>
       
       <p>I'm pretty happy with how my self-milled PCBs turned out. Being able to mill my own PCBs makes iteration a lot quicker, even if its only for simple parts. My third iteration worked great for my <a href="../13_finalproject/index.html">ipod prototype</a> and I used the exact same design in my final PCB. I definetly know I'll be doing a lot more of this in the future since its always a good idea to test a design before spending hundreds of dollars on shipping and tarrifs for JLCPCB to make it.</p>
+
+      <div class="image-duo">
+        <img src="./Assets/protowheelfront.jpg" alt="">
+        <img src="./Assets/protowheelclose.jpg" alt="">
+      </div>
 
     </section>
     <script src="../slideshow.js"></script>

@@ -218,6 +218,14 @@ footer a {
   color: var(--background-color);
 }
 
+.light {
+  color: var(--primary-text-color);
+}
+
+.light:hover {
+  color: var(--primary-text-color);
+}
+
 /* Images */
 .image-duo {
   display: flex;

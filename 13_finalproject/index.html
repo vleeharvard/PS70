@@ -34,16 +34,19 @@
 
       <h2>Specifications</h2>
 
-        <ul>
-          <li>ESP32-S3-WROOM Module</li>
-          <li>MAX98357A Class D I2S Amplifier</li>
-          <li>MCP73871T Battery Regulation IC</li>
-          <li>32Gb MicroSD Card</li>
-          <li>128 x 64 SSD1309 I2C OLED Display</li>
-          <li>USB Type C Port</li>
-          <li>3.5 mm Aux Jack</li>
-          <li>Mono, 44100hz, 16-bit .wav Playback</li>
-        </ul>
+      <ul>
+        <li>ESP32-S3-WROOM Module</li>
+        <li>MAX98357A Class D I2S Amplifier</li>
+        <li>MCP73871T Battery Regulation IC</li>
+        <li>Powered by LiPo battery</li>
+        <li>32Gb MicroSD Card</li>
+        <li>128 x 64 SSD1309 I2C OLED Display</li>
+        <li>USB Type C Port</li>
+        <li>3.5 mm Aux Jack</li>
+        <li>Mono, 44100hz, 16-bit .wav Playback</li>
+      </ul>
+
+      <img src="./Assets/Final/fulldemo.gif" alt="">
 
       <h2>Project Selection & Brainstorming</h2>
 
@@ -59,11 +62,15 @@
         Around this time, my brother e-waste dumpster dived an old ipod nano and installed custom software on it (<a href="https://en.wikipedia.org/wiki/Rockbox">Rockbox</a>) which I thought was pretty sick. The whole idea behind the digicam was to find a way for me to use my phone less, and with how much I listen to music, an ipod would be a pretty cool everyday carry. However, ipods are surprisingly expensive if you're unwilling to go dumpster diving, so I figured that creating an ipod would be a perfect (and potentially useful) final project. 
       </p>
 
+      <img src="" alt="">
+
       <p>
         This pivot also meant that my project was much more feasible in the given time frame. At this point, I already had a decent wav player made and I knew that I could recreate the iconic capacitive touch wheel on the ipods utilizing the touch pins on the ESP32-S3 and some fancy software. I'd rather scale back a bit end up with an unfinished project!
       </p>
 
       <h2>Minimum Viable Project</h2>
+
+      <img src="./Assets/Prototype/mvp2.gif" alt="">
 
       <p>
         Before MVP week, I was still planning on creating a DJ mixer from scratch. My minimum viable project was a simple .wav player with a TFT screen and potentiometer.
@@ -78,16 +85,19 @@
       </p>
 
       <p>
-        While it hurt my ego, I though that it would be best if I pivoted to an extension of my mvp: an ipod.
+        Even if it hurt my ego, I though that it would be best if I pivoted to an extension of my mvp: an ipod.
       </p>
 
       <h2>Design Process: Prototyping</h2>
 
-      <img src="./Assets/Prototype/prototypeclose.JPG" alt="">
+      <img src="./Assets/Prototype/proto.gif" alt="">
 
       <p>
         The hardware necessary to play audio at "good enough" quality is actually quite simple. An ESP32, microSD card module, and I2S amp is really all I needed to play 16 bit PCM, 44100hz sample rate, mono .wav files. With the left and right audio samples interleaved, stereo audio can be achieved by connecting another mono amp and designating which sample each amp should play by supplying a specific voltage to a specific pin (I believe this process is called "hardware strapping"?). However, I quickly encountered a problem: 2 amplifiers means two negative terminals but wired earbuds only have one ground terminal. However, after some testing and reading, I learned that this was a problem that couldn't be solved without some extra hardware.
       </p>
+
+      <img src="./Assets/Prototype/mvp.gif" alt="">
+      <p class="caption">My .wav player prototype esentially had the same components as my mvp, excluding the rotary encoder</p>
 
       <p>
         I also discovered that I'd have to significantly lower the output volume of the amplifier if I wanted to use headphones. Simply lowering the value of each sample exarcerbated the noise of the circuitry, so I resulted to a trusty voltage divider.
@@ -97,18 +107,41 @@
         I also decided it was time to upgrade my solderless breadboard circuit to a soldered breadboard for more confident debugging and to have something to show at the project fair in case my PCB didn't arrive in time (it didn't arrive in time). 
       </p>
 
-      <img src="./Assets/Prototype/prototypefront.JPG" alt="">
+      <div class="image-duo">
+        <img src="./Assets/Prototype/prototypeclose.JPG" alt="">
+        <img src="./Assets/Prototype/prototypefront.JPG" alt="">
+      </div>
 
       <p>
         I was able to perfect the capacitive wheel, which was the most tricky component of the project, after three iterations. Testing out different shapes and spacings ensured that the core component of my ipod would feel smooth and intuitive to use. Learn more about how I was able to quickly iterate on custom pcbs on my <a href="../08_cnc/index.html">CNC week documentation</a>.
+      </p>
+
+      <img src="./Assets/Final/protowheelfront.jpg" alt="">
+
+      <p>
+        At this stage, I also looked into possible ways to reduce the noisyness of the amplifier through decoupling capacitors, low-value resistors, and increasing the distance between signal lines. 
       </p>
 
       <img src="./Assets/Prototype/prototypeback.jpg" alt="">
       <p class="caption">An absolute mess, this is why we need PCBs</p>
 
       <p>
-        At this stage, I also looked into possible ways to reduce the noisyness of the amplifier through decoupling capacitors, low-value resistors, and increasing the distance between signal lines. 
+        It definetly worked though! A solid prototype allowed me to perfect my code knowing that hardware issues were unlikely even before the PCB arrived.
       </p>
+
+      <img src="./Assets/Prototype/proto.gif" alt="">
+
+      <p>
+        <i>I</i> even made a demo video for it. 
+      </p>
+
+      <a style="margin: auto;" href="https://youtu.be/bJwVbmu3xk8">
+        <iframe width="704" height="396"
+          src="https://youtu.be/bJwVbmu3xk8">
+        </iframe> 
+
+        <p>Click here if the video doesn't work!</p>
+      </a>
 
       <h2>Design Process: PCB Design</h2>
 
@@ -166,11 +199,18 @@
         I decided to use the MCP73871 IC (integrated circuit) since it supports simultaneous battery charging and powering, a feature called "load sharing". The MCP73871 can power a device directly from USB power while charging the battery (also wtih USB power) reducing stress on the battery. Battery regulation ICs without load sharing risk damaging the battery. I felt like the extra 50 cents for load sharing were probably worth it.
       </p>
 
+      <img src="./Assets/baticschematic.webp" alt="">
+
       <p>
         This was by far the most intimidating part of the process since messing this up could render my PCB useless (as in, it can't get any power from USB <i>or</i> battery) or damage a lithium ion battery. With no tried and true breakout board to rely I, I very closely read the <a href="https://ww1.microchip.com/downloads/en/DeviceDoc/MCP73871-Data-Sheet-20002090E.pdf">chip's datasheet</a> and followed an <a href="https://www.instructables.com/How-to-Bring-USB-Rechargeable-LiPo-Power-to-Your-C/">instructables guide</a>.
       </p>
 
-      <img src="./Assets/baticschematic.webp" alt="">
+      <p>
+        However, it works very nicely. I can see when my device is being powered by the battery or USB.
+      </p>
+
+      <img src="./Assets/Final/batuse.gif" alt="">
+
 
       <h3>OLED Display</h3>
 
@@ -224,8 +264,8 @@
         <div class="slides"> <img src="./Assets/Prototype/front-1.png" alt=""> </div>
         <div class="slides"> <img src="./Assets/Prototype/back-1.png" alt=""> </div>
         
-        <a class="prev" style="color: #dedede;" onclick="plusSlides(-1, 'slideshow1')">&#10094;</a>
-        <a class="next" style="color: #dedede;" onclick="plusSlides(1, 'slideshow1')">&#10095;</a>
+        <a class="prev light" onclick="plusSlides(-1, 'slideshow1')">&#10094;</a>
+        <a class="next light" onclick="plusSlides(1, 'slideshow1')">&#10095;</a>
       </div>
 
       <p>Here's the 3D render on Kicad:</p>
@@ -235,6 +275,16 @@
         
         <a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
         <a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+      </div>
+
+      <p>And finally, what the PCB actually looks like:</p>
+      <div id="slideshow3" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/Final/pcbfront.JPG" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/pcbback.JPG" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/assempcbback.JPG" alt=""> </div>
+        
+        <a class="prev" onclick="plusSlides(-1, 'slideshow3')">&#10094;</a>
+        <a class="next" onclick="plusSlides(1, 'slideshow3')">&#10095;</a>
       </div>
 
       <h2>Design Process: Programming</h2>
@@ -309,6 +359,9 @@ i2s_write(output->i2s_port,
       </p>
 
       <h3>Capacitive sensors</h3>
+
+      <img src="./Assets/Final/finalwheelfront.JPG" alt="">
+
       <p>
         Each pad on my touch wheel is just a capacitive sensor. By preforming a <code>analogRead()</code> and checking whether the read value is above a certain threshold, I can see whether someone's finger is touching a pad.
       </p>
@@ -361,17 +414,17 @@ u8g2->drawStr(0, 60, (String(volume / 2) + " db").c_str());
         I created a simple user interface that makes use of <code>u8g2</code> fonts. Everything is a font element, even the icon. I choose the text-ui aesthetic for coolness factor and simplicity. 
       </p>
 
-      <img src="" alt="">
-
       <p>
         Inside the song selection menu, spinning the wheel changes the selected song and swiping changes the current playlist. Holding down the button selects the song.
       </p>
 
-      <img src="" alt="">
+      <img src="./Assets/Final/wheeluse.gif" alt="">
 
       <p>
-        During playback, spinning the wheel changes volume. Swiping horizontal switches songs. Swiping vertically opens the menu. Hodling down the button toggles pausing. I also decided to include some statistics about the current .wav file being played to fill up some empty space. I included some text indicating whether it's being powered by battery or USB to display the MCP73871T's load-sharing capabilities.
+        During playback, spinning the wheel changes volume. Swiping horizontal switches songs. Swiping vertically opens the menu. Holdinging down the button toggles pausing. I also decided to include some statistics about the current .wav file being played to fill up some empty space. I included some text indicating whether it's being powered by battery or USB to display the MCP73871T's load-sharing capabilities.
       </p>
+
+      <img src="./Assets/Final/swipeuse.gif" alt="">
 
       <h2>Design Process: Enclosure</h2>
 
@@ -379,12 +432,17 @@ u8g2->drawStr(0, 60, (String(volume / 2) + " db").c_str());
         I created the enclosure for both the prototype and PCB using tinted laser cut acrylic. Following the same process I did during <a href="../02_2Ddesign/index.html">box making</a> and <a href="../03_fabrication/index.html">my kinetic sculpture</a>, I used Onshape to design and generate DXFs which I brough to Rhino for post processing. I think it turned out very nicely! 
       </p>
 
-      <div id="slideshow3" class="slideshow-container">
-
+      <div id="slideshow4" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/Final/casetexttop.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/casetextbot.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/finalback.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/finalside.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/prototext.jpg" alt=""> </div>
         
-        <a class="prev" onclick="plusSlides(-1, 'slideshow3')">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, 'slideshow3')">&#10095;</a>
+        <a class="prev light" onclick="plusSlides(-1, 'slideshow4')">&#10094;</a>
+        <a class="next light" onclick="plusSlides(1, 'slideshow4')">&#10095;</a>
       </div>
+      <p class="caption">Laser engraved acrylic just looks so cool</p>
 
       <h2>Bill of Materials</h2>
         <p>Here's the bill of materials for the PCB:</p>
@@ -433,6 +491,11 @@ u8g2->drawStr(0, 60, (String(volume / 2) + " db").c_str());
         </tbody>
       </table>
 
+      <div class="image-duo">
+        <img src="./Assets/Final/assempcbback.JPG" alt="">
+        <img src="./Assets/Final/pcbback.JPG" alt="">
+      </div>
+
       <p>Besides that, I had to buy an <a href="https://www.amazon.com/dp/B0FRMFTZLB?ref=ppx_yo2ov_dt_b_fed_asin_title">128x64 I2C OLED display</a> and <a href="https://www.amazon.com/dp/B00J2QET64?ref=ppx_yo2ov_dt_b_fed_asin_title">lipo battery with a JST cable</a>.</p>
 
       <h2>If you want to make your own...</h2>
@@ -455,8 +518,58 @@ u8g2->drawStr(0, 60, (String(volume / 2) + " db").c_str());
         All of code for this project can be found on <a href="https://github.com/vleeharvard/not-an-ipod">this github repository</a>. Be warned, it is not very pretty. Look at the <code>src</code> directory to find the actualy c++ files. Their corresponding header files can be found in the <code>include</code> directory.
       </p>
 
+      <img src="./Assets/Final/finalfront.jpg" alt="">
+
       <h2>Image gallery</h2>
+
+      <div class="image-duo">
+        <img src="./Assets/Final/finalfront.jpg" alt="">
+        <img src="./Assets/Final/finalback.jpg" alt="">
+      </div>
+
+      <div class="image-duo">
+        <img src="./Assets/Final/pcbfront.JPG" alt="">
+        <img src="./Assets/Final/assempcbback.JPG" alt="">
+      </div>
+
+      <div class="image-duo">
+        <img src="./Assets/Final/protofront.jpg" alt="">
+        <img src="./Assets/Final/protoback.jpg" alt="">
+      </div>
       
+      <h3>Close ups:</h3>
+      <div id="slideshow5" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/Final/finalcloseup1.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/finalcloseup2.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/finalcloseup3.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/assempcbcloseup1.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/assempcbcloseup2.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/assempcbcloseup3.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/pcbcloseup1.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/pcbcloseup2.jpg" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/pcbcloseup3.jpg" alt=""> </div>
+        
+        <a class="prev light" onclick="plusSlides(-1, 'slideshow5')">&#10094;</a>
+        <a class="next light" onclick="plusSlides(1, 'slideshow5')">&#10095;</a>
+      </div>
+
+      <h3>Demos</h3>
+      <div id="slideshow6" class="slideshow-container">
+        <div class="slides"> <img src="./Assets/Final/fulldemo.gif" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/wheeluse.gif" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/swipeuse.gif" alt=""> </div>
+        <div class="slides"> <img src="./Assets/Final/batuse.gif" alt=""> </div>
+
+        <a class="prev light" onclick="plusSlides(-1, 'slideshow6')">&#10094;</a>
+        <a class="next light" onclick="plusSlides(1, 'slideshow6')">&#10095;</a>
+      </div>
+
+      <h2>Reflection</h2>
+      <p>
+        I'm actually really happy with how my final project turned out.
+      </p>
+
+      <img src="./Assets/Final/casetextbot.jpg" alt="">
 
     </section>
     <script src="../slideshow.js"></script>
