@@ -299,7 +299,7 @@
         To prevent the code for my ipod from being in one massive unorganize file, I ended up migrating to platformio and tried to make my program as modular as possible. I made extensive use of macros to ensure that I could easily tweak certain aspects of my ipod. I also needed to keep optimization in mind since the ESP32s have limited resources. <span class="caption">Yes, I know I used String objects which aren't the most optimal for memory conservation but man they are so easy to work with.</span>
       </p>
 
-      <h3>Cacheing</h3>
+      <h3>Caching</h3>
 
       <code><div><pre>
 size_t Wav_File::read_frames(Frame_t *frames, size_t num_frames) {
