@@ -1,214 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Victor Lee's PS70</title>
-    <link rel="stylesheet" href="../style.css">
-  </head>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Victor Lee's PS70</title>
+		<link rel="stylesheet" href="../style.css">
+	</head>
 
-  <nav>
-    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
-    <a href="../index.html#final-project">Work</a>
-    <a href="../about.html">About</a>
-  </nav>
+	<nav>
+		<a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+		<a href="../index.html#final-project">Work</a>
+		<a href="../about.html">About</a>
+	</nav>
 
-  <body>
-    <section class="blog">
+	<body>
+		<section class="blog">
 
-      <h1>Week 10: Machine</h1>
-      <h2>Team: Alex, AJ, Faith, Victor</h2>
+			<h1>Week 10: Machine Building</h1>
+			<h2>Team: Alex, AJ, Faith, Victor</h2>
 
-      <img src="./Assets/timelapsespiral.gif" alt="">
+			<img src="./Assets/timelapsespiral.gif" alt="">
 
-      <p>
-        This week, our team (Alex, AJ, Faith, Victor) worked together to create an automatic Zen Garden from scratch! Utilizing 3D printed gears, a laser cut frame, and two stepper motors, we were able to create 2 axis machine that draws paths on sand using a metal bearing.
-      </p>
+			<p>
+				This week, our team (Alex, AJ, Faith, Victor) worked together to create an automatic Zen Garden from scratch! Utilizing 3D printed gears, a laser cut frame, and two stepper motors, we were able to create 2 axis machine that draws paths on sand using a metal bearing.
+			</p>
 
-      <h2>Brainstorming</h2>
+			<h2>Brainstorming</h2>
 
-      <p>
-        At the beginning of the project, our group already decided that we wanted to make something different, free from the constraints of the provided 2-axis gantry kit. We were immediately drawn to these <a href="https://mesmerart.com/products/automatic-zen-garden-sand-bowl-kinetic-art">automatic zen garden kinetic sculptures</a>, which seemed quite simple to make despite the hundred dollar price tag. We thought that controlling the steel ball below the wood surface was a unique mechanism that was perfect for this weeks assignmnent.
-      </p>
+			<p>
+				At the beginning of the project, our group already decided that we wanted to make something different, free from the constraints of the provided 2-axis gantry kit. We were immediately drawn to these <a href="https://mesmerart.com/products/automatic-zen-garden-sand-bowl-kinetic-art">automatic zen garden kinetic sculptures</a>, which seemed quite simple to make despite the hundred dollar price tag. We thought that controlling the steel ball below the wood surface was a unique mechanism that was perfect for this weeks assignmnent.
+			</p>
 
-      <h2>Early Prototypes</h2>
-      
-      <p>
-        We knew that we would have to use a stepper motor to control the rotational axis and another to control the linear axis. We immediately settled on a lead screw and traveler mechanism.
-      </p>
+			<h2>Early Prototypes</h2>
 
-      <p>
-        Our design was centered around the lazy susan bearing.
-      </p>
+			<p>
+				We knew that we would have to use a stepper motor to control the rotational axis and another to control the linear axis. We immediately settled on a lead screw and traveler mechanism.
+			</p>
 
-      <img src="./Assets/firstpart.JPEG" alt="">
+			<p>
+				Our design was centered around the lazy susan bearing.
+			</p>
 
-      <p>
-        Our early prototyping began with the most complex part. We decided to create the piece that would mount to one side of the bearing and carry the linear axis. We also created the magnet carrier that would go on the lead screw.
-      </p>
+			<img src="./Assets/firstpart.JPEG" alt="">
 
-      <img src="./Assets/firstproto.JPEG" alt="">
+			<p>
+				Our early prototyping began with the most complex part. We decided to create the piece that would mount to one side of the bearing and carry the linear axis. We also created the magnet carrier that would go on the lead screw.
+			</p>
 
-      <p>
-        By using a internal gear, we can increase the resolution of the rotational axis beyond microstepping. This stage was also where we fine tuned mounting the stepper mounts and tolerances for the guide rail and linear bearings.
-      </p>
+			<img src="./Assets/firstproto.JPEG" alt="">
 
-      <p>
-        However, our initial designs had some drawbacks.
-      </p>
+			<p>
+				By using a internal gear, we can increase the resolution of the rotational axis beyond microstepping. This stage was also where we fine tuned mounting the stepper mounts and tolerances for the guide rail and linear bearings.
+			</p>
 
-      <p>
-        In order to extend our range of motion, we had to seperate our mechanism into several parts due to the limited size of the printer beds.
-      </p>
+			<p>
+				However, our initial designs had some drawbacks.
+			</p>
 
-      <img src="./Assets/secondproto.JPEG" alt="">
-      <p class="caption">3D prints, bearing, and stepper</p>
+			<p>
+				In order to extend our range of motion, we had to seperate our mechanism into several parts due to the limited size of the printer beds.
+			</p>
 
-      <p>
-        However, we realized that rotating around the center of our lead screw was inefficient/redundant. In our third iteration, we put the end of the lead screw at the center of our assembly, effectively doubling the radius of our movement.
-      </p>
+			<img src="./Assets/secondproto.JPEG" alt="">
+			<p class="caption">3D prints, bearing, and stepper</p>
 
-      <img src="./Assets/thirdproto.JPEG" alt="">
+			<p>
+				However, we realized that rotating around the center of our lead screw was inefficient/redundant. In our third iteration, we put the end of the lead screw at the center of our assembly, effectively doubling the radius of our movement.
+			</p>
 
-      <p>
-        At this point, we also assembled a base to hold the slip ring (which makes it possible for the wires to spin) and the stepper motor and spur gear for rotational movement.
-      </p>
+			<img src="./Assets/thirdproto.JPEG" alt="">
 
-      <h2>Final Product</h2>
+			<p>
+				At this point, we also assembled a base to hold the slip ring (which makes it possible for the wires to spin) and the stepper motor and spur gear for rotational movement.
+			</p>
 
-      <img src="./Assets/attachedtobase.JPEG" alt="">
+			<h2>Final Product</h2>
 
-      <p>
-        Our project really began to come together after we constructed the lasercut wood frame and lid.
-      </p>
+			<img src="./Assets/attachedtobase.JPEG" alt="">
 
-      <img src="./Assets/lid.gif" alt="">
-      
-      <p>
-        After wiring, programming, and creating the wooden frame to hold the sand, our project is almost complete!
-      </p>
+			<p>
+				Our project really began to come together after we constructed the lasercut wood frame and lid.
+			</p>
 
-      <img src="./Assets/firstmovements.gif" alt="">
-      <p class="caption">Very exciting</p>
+			<img src="./Assets/lid.gif" alt="">
 
-      <p>
-        Adding the veneer walls and sand was the final part!
-      </p>
+			<p>
+				After wiring, programming, and creating the wooden frame to hold the sand, our project is almost complete!
+			</p>
 
-      <img src="./Assets/timelapsespiral.gif" alt="">
-      <p class="caption">Sick timelapse of the spiral pattern!</p>
+			<img src="./Assets/firstmovements.gif" alt="">
+			<p class="caption">Very exciting</p>
 
-      <img src="./Assets/drawline.gif" alt="">
-      <p class="caption">Look at that nice sand trail</p>
+			<p>
+				Adding the veneer walls and sand was the final part!
+			</p>
 
-      <img src="./Assets/movinaround.gif" alt="">
-      <p class="caption">Don't you feel more zen already?</p>
+			<img src="./Assets/timelapsespiral.gif" alt="">
+			<p class="caption">Sick timelapse of the spiral pattern!</p>
 
+			<img src="./Assets/drawline.gif" alt="">
+			<p class="caption">Look at that nice sand trail</p>
 
-      <h2> Components Used </h2>
-      <ul>
-        <li>
-          <strong>ESP32 Microcontroller</strong>: used to control the stepper motors, handle input/output signals and manage programmed motions.
-        </li>
-        <li>
-          <strong>Stepper Motor (2X)</strong>: connected to the lead screw to drive the linear motion and to the base for the circular motion
-        </li>
-        <li>
-          <strong>Lead Screw</strong>: convert rotational motion from the stepper motor into linear motion for the magnet carriage
-        </li>
-        <li>
-          <strong>Magnet and Metal Ball</strong>: how we draw on sand through the wood platform
-        </li>
-        <li>
-          <strong>Lazy Susan Bearing</strong>: allows the base to rotate smoothly
-        </li>
-        <li>
-          <strong>3D-Printed Base</strong>: includes motor mounts and the carriage for the lead screw system.
-        </li>
-        <li>
-          <strong>Plug</strong>: powers the motor and control electronics.
-        </li>
-        <li>
-          <strong>Breadboard and Jumper Wires</strong>: used for circuit prototyping and connecting the ESP32 to motor drivers.</li>
-        <li>
-          <strong>Motor Drivers</strong>: interfaces between the ESP32 and stepper motors
-        </li>
-        <li>
-          <strong>Wooden Circular Platform / Sand Tray</strong>: holds the layer of sand on which the metal ball creates patterns
-        </li>
-        <li>
-          <strong> Wood Base </strong>: where the breadboards + the 3D-Printed structure is placed to keep everything together
-        </li>
-        <li>
-          <strong> Wood Veneer </strong>: used to wrap around the base and tray of sand
-        </li>
-      </ul>
+			<img src="./Assets/movinaround.gif" alt="">
+			<p class="caption">Don't you feel more zen already?</p>
 
-      <div id="slideshow1" class="slideshow-container">
-        <div class="slides"> <img src="./Assets/final1.jpg" alt=""> </div>
-        <div class="slides"> <img src="./Assets/final2.jpg" alt=""> </div>
-        <div class="slides"> <img src="./Assets/final3.jpg" alt=""> </div>
-        
-        <a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
-      </div>
-      <p class="caption">Here's what it looks like</p>
+			<h2>
+				Components Used
+			</h2>
+			<ul>
+				<li>
+					<strong>ESP32 Microcontroller</strong>: used to control the stepper motors, handle input/output signals and manage programmed motions.
+				</li>
+				<li>
+					<strong>Stepper Motor (2X)</strong>: connected to the lead screw to drive the linear motion and to the base for the circular motion
+				</li>
+				<li>
+					<strong>Lead Screw</strong>: convert rotational motion from the stepper motor into linear motion for the magnet carriage
+				</li>
+				<li>
+					<strong>Magnet and Metal Ball</strong>: how we draw on sand through the wood platform
+				</li>
+				<li>
+					<strong>Lazy Susan Bearing</strong>: allows the base to rotate smoothly
+				</li>
+				<li>
+					<strong>3D-Printed Base</strong>: includes motor mounts and the carriage for the lead screw system.
+				</li>
+				<li>
+					<strong>Plug</strong>: powers the motor and control electronics.
+				</li>
+				<li>
+					<strong>Breadboard and Jumper Wires</strong>: used for circuit prototyping and connecting the ESP32 to motor drivers.
+				</li>
+				<li>
+					<strong>Motor Drivers</strong>: interfaces between the ESP32 and stepper motors
+				</li>
+				<li>
+					<strong>Wooden Circular Platform / Sand Tray</strong>: holds the layer of sand on which the metal ball creates patterns
+				</li>
+				<li>
+					<strong>
+						Wood Base
+					</strong>: where the breadboards + the 3D-Printed structure is placed to keep everything together
+				</li>
+				<li>
+					<strong>
+						Wood Veneer
+					</strong>: used to wrap around the base and tray of sand
+				</li>
+			</ul>
 
-      <h3>View code <a href="./rawcode.html"> here!</a></h3>
+			<div id="slideshow1" class="slideshow-container">
+				<div class="slides">
+					<img src="./Assets/final1.jpg" alt="">
+				</div>
+				<div class="slides">
+					<img src="./Assets/final2.jpg" alt="">
+				</div>
+				<div class="slides">
+					<img src="./Assets/final3.jpg" alt="">
+				</div>
 
-      <h2>Challenges</h2>
+				<a class="prev" onclick="plusSlides(-1, 'slideshow2')">&#10094;</a>
+				<a class="next" onclick="plusSlides(1, 'slideshow2')">&#10095;</a>
+			</div>
+			<p class="caption">Here's what it looks like</p>
 
-      <p>
-        Sand is a messy medium to work with. Pretty sure there's some crunch under my "c" key.
-      </p>
+			<h3>View code <a href="./rawcode.html">
+					here!
+				</a></h3>
 
-      <p>
-        The fabrication and assmbly stages were fine the most part. The biggest challenge we encountered here was getting a base of the desired size since we had limitations whether it's with the laser-cutter or shopbot. The main challenges were when it comes to driving the machine and wiring. 
-      </p>
+			<h2>Challenges</h2>
 
-      <p>
-        We also faced wiring and power connection challenges. One of our plugs had its positive and negative terminals reversed, which fried two motor drivers. With Bobby's help, we figured what was wrong and replaced the damaged drivers (MAYBE DON'T ALWAYS TRUST LABELS), and used a multimeter to verify correct polarity before powering the system again. These steps helped prevent further electrical issues.
-      </p>
+			<p>
+				Sand is a messy medium to work with. Pretty sure there's some crunch under my "c" key.
+			</p>
 
-      <p>
-        On the software side, we struggled to find the right combination of step size, acceleration, and motor speed to minimize vibration and noise while maintaining smooth movement of the base. If the motors moved too quickly, they skipped steps and caused uneven patterns; if they moved too slowly, the drawing motion became inconsistent. After several iterations, we tuned the stepper parameters in our Arduino code to achieve a good balance between precision and smooth operation. 
-      </p>
+			<p>
+				The fabrication and assmbly stages were fine the most part. The biggest challenge we encountered here was getting a base of the desired size since we had limitations whether it's with the laser-cutter or shopbot. The main challenges were when it comes to driving the machine and wiring.
+			</p>
 
-      <p>
-        Mechanically, friction from the traveler touching the wooden top due to the pull between the magnet and marble caused some skipped steps. If we were to redo this project, we would definetly use a stronger motor or figure out a better way to regular the height of the traveler (ie. two guide rails). We ended up switching to a smaller marble and weaker magnet to rectify this, but it isn't always perfect.
-      </p>
+			<p>
+				We also faced wiring and power connection challenges. One of our plugs had its positive and negative terminals reversed, which fried two motor drivers. With Bobby's help, we figured what was wrong and replaced the damaged drivers (MAYBE DON'T ALWAYS TRUST LABELS), and used a multimeter to verify correct polarity before powering the system again. These steps helped prevent further electrical issues.
+			</p>
 
-      <p>
-        Also, as we were testing, we left the power plugged in, which resulted in one of the steppers getting so hot it melted the 3D printed gear that was attached to it.
-      </p>
+			<p>
+				On the software side, we struggled to find the right combination of step size, acceleration, and motor speed to minimize vibration and noise while maintaining smooth movement of the base. If the motors moved too quickly, they skipped steps and caused uneven patterns; if they moved too slowly, the drawing motion became inconsistent. After several iterations, we tuned the stepper parameters in our Arduino code to achieve a good balance between precision and smooth operation.
+			</p>
 
-      <p>
-        In the final stretch of our project, I (Victor) yanked my laptop away and absolutely cooked the usb c port on the ESP32 we were using. While we were able to save our project by switiching to the one on Alex's project, not exactly ideal. 
-      </p>
+			<p>
+				Mechanically, friction from the traveler touching the wooden top due to the pull between the magnet and marble caused some skipped steps. If we were to redo this project, we would definetly use a stronger motor or figure out a better way to regular the height of the traveler (ie. two guide rails). We ended up switching to a smaller marble and weaker magnet to rectify this, but it isn't always perfect.
+			</p>
 
-      <img src="./Assets/broken.JPG" alt="">
-      
-      <p class="caption"> <a style="text-decoration: none;" href="https://youtu.be/HFhX6Ig_RkA?t=20">1:30 AM, "we are so cooked"</a> </p>
+			<p>
+				Also, as we were testing, we left the power plugged in, which resulted in one of the steppers getting so hot it melted the 3D printed gear that was attached to it.
+			</p>
 
-      <h2>Reflection</h2>
-      <p>
-        We had a lot of fun making this project, as stressful as it was. No all nighters though so we'll take it!
-      </p>
+			<p>
+				In the final stretch of our project, I (Victor) yanked my laptop away and absolutely cooked the usb c port on the ESP32 we were using. While we were able to save our project by switiching to the one on Alex's project, not exactly ideal.
+			</p>
 
-      <img src="./Assets/donottouch.JPG" alt="">
+			<img src="./Assets/broken.JPG" alt="">
 
-    </section>
-    <script src="../slideshow.js"></script>
-  </body>
+			<p class="caption">
+				<a style="text-decoration: none;" href="https://youtu.be/HFhX6Ig_RkA?t=20">1:30 AM, "we are so cooked"</a>
+			</p>
 
-  <footer>
-    <a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
-    <a href="../index.html#final-project">Work</a>
-    <a href="../about.html">About</a>
-    <div id="contact-info">
-      <a href="">vlee@college.harvard.edu</a>
-      <a href="">617 817 0330</a>
-    </div>
-  </footer>
+			<h2>Reflection</h2>
+			<p>
+				We had a lot of fun making this project, as stressful as it was. No all nighters though so we'll take it!
+			</p>
+
+			<img src="./Assets/donottouch.JPG" alt="">
+		</section>
+		<script src="../slideshow.js"></script>
+	</body>
+
+	<footer>
+		<a id="logo" href="../index.html"><img src="../signature.svg" alt="Logo"></a>
+		<a href="../index.html#final-project">Work</a>
+		<a href="../about.html">About</a>
+		<div id="contact-info">
+			<a href="">vlee@college.harvard.edu</a>
+			<a href="">617 817 0330</a>
+		</div>
+	</footer>
 </html>
